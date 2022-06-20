@@ -1,0 +1,43 @@
+.carousel {
+	width: 97.5%;
+	background-color: #f3f1ee;
+	height: 794px;
+	display: flex;
+}
+/* .slider {
+}
+
+.slide-active {
+	animation: move 1s;
+	position: relative;
+	left: 200px;
+} */
+
+.image {
+	width: 300px;
+}
+.slider {
+	position: relative;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.image {
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+}
+
+.slide {
+	opacity: 0;
+	transition-duration: 1s ease;
+}
+
+.slide-active {
+	opacity: 1;
+	display: block;
+	transition-duration: 1s;
+	transform: translateX(200px);
+}
