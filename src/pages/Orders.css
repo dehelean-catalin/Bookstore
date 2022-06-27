@@ -1,0 +1,17 @@
+.orders {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.orders-container {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+	height: 90%;
+}
+.orders-titile {
+	font: normal normal bold 38px/46px Lora;
+	color: #262626;
+	margin-bottom: 32px;
+}

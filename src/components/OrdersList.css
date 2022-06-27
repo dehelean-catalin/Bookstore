@@ -1,0 +1,78 @@
+.orders-list {
+	height: 100%;
+	overflow: auto;
+	padding-right: 30px;
+}
+::-webkit-scrollbar {
+	width: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+	border: 4px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+	border-radius: 9999px;
+	background-color: #aaaaaa;
+}
+.order-item {
+	display: flex;
+	margin: 0px;
+	padding: 32px 0px;
+	border-bottom: 2px solid #e9e9e9;
+}
+
+.order-item-icon {
+	width: 108px;
+	height: 120px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #f3f1ee;
+	border-radius: 4px;
+	margin-right: 32px;
+}
+.order-item-icon-container {
+	display: flex;
+	font-size: 80px;
+	transform: scale(0.9, 1);
+}
+.order-item-details {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+.order-item-details-container {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 4px;
+}
+.order-item-details-container-2 {
+	margin-top: 16px;
+}
+.order-item-id {
+	font: normal normal bold 30px/38px Lora;
+	color: #262626;
+}
+.order-item-price {
+	font: normal normal bold 30px/38px Roboto;
+	color: #b69454;
+	text-align: right;
+}
+.order-item-amount {
+	font: normal normal normal 24px/32px Roboto;
+	color: #262626;
+}
+.order-item-amount-number {
+	font: normal normal bold 24px/32px Roboto;
+}
+.order-edit-btn {
+	text-decoration: none;
+	font: normal normal normal 20px/28px Roboto;
+	color: #000000;
+}
+.order-item-status {
+	font: normal normal normal 22px/30px Roboto;
+	color: #000000;
+}
+.order-item-status {
+	font: normal normal bold 20px/28px Roboto;
+}

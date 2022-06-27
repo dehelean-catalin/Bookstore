@@ -1,17 +1,17 @@
 import React from "react";
-import { CardList } from "./CardList";
-import "./CardContainer.css";
-export const CardContainer = (props) => {
+import { BookList } from "./BookList";
+import "./Books.css";
+export const Books = (props) => {
 	return (
 		<div className="card-lists">
 			<div className="category-title">
 				<h2 className="category-title-name">Best books of the mouth</h2>
 			</div>
-			<CardList booksList={props.booksList} />
+			<BookList booksList={props.booksList} />
 			<div className="category-title">
 				<h2 className="category-title-name">Recently added</h2>
 			</div>
-			<CardList booksList={props.booksList} />
+			<BookList booksList={props.booksList} />
 		</div>
 	);
 };

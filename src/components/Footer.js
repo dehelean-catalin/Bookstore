@@ -4,7 +4,10 @@ export const Footer = () => {
 	return (
 		<div className="footer">
 			<div className="footer-text">
-				&copy; CopyRight <a>IT Perspectives</a>
+				&copy; CopyRight{" "}
+				<a href="https://www.itperspectives.ro" target="_blank">
+					IT Perspectives
+				</a>
 			</div>
 		</div>
 	);

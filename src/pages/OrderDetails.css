@@ -1,0 +1,9 @@
+.order-details {
+	display: flex;
+	justify-content: center;
+	padding: 120px 0px;
+}
+.order-details-container {
+	display: inline-flex;
+	width: 80%;
+}

@@ -13,22 +13,24 @@ export const Carousel = ({ slides }) => {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setCurrent(current === length - 1 ? 0 : current + 1);
-			console.log("lala");
 		}, 5000);
 		return () => clearInterval(interval);
 	}, [current]);
 
 	return (
-		<section className="carousel" onClick={nextSlide}>
+		<div className="carousel" onClick={nextSlide}>
 			{SliderData.map((slide, index) => {
 				return (
 					<div className={index === current ? "slide-active" : "slide"} key={index}>
-						<div>Titlu</div>
-						<div>lorem loremfdqew9c8nwq9di</div>
-						<img src={slide.image} alt="travel image" className="image" />
+						<div className="carousel-container">
+							<h3 className="carousel-title">{slide.title}</h3>
+							<h3 className="carousel-description">{slide.description}</h3>
+						</div>
+
+						<img src={slide.image} className="carousel-image" alt="travel image" />
 					</div>
 				);
 			})}
-		</section>
+		</div>
 	);
 };
