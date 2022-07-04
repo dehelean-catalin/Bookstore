@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "icon": "https://cdn.dc5.ro/img-prod/1700989269-0-240.jpeg",
+        "title": "Ferma animalelor - 1984",
+        "price": 10.45,
+        "author": "George Orwell",
+        "description": "Convingerea lui George Orwell că arta nu trebuie disociată de politică și că „nimic din existența omenească nu se poate sustrage politicului” (Anca Peiu, „Prefață”) transpare din toate scrierile sale, însă este cu atât mai pregnantă în cele două ficțiuni, Ferma animalelor și 1984, în care autorul britanic înfățișează – în maniere diferite – ce presupune viața sub un regim dictatorial. Prozele sale au influențat societatea în așa manieră, încât termenul „orwellian” este folosit astăzi pentru a desemna acțiuni sau idei totalitare, constrângătoare și brutale pentru individ, negarea evidenței, manipularea prin dezinformare și rescrierea trecutului."
+    },
+    {
+        "id": 2,
+        "icon": "https://cdn.dc5.ro/img-prod/974306677-0-240.jpeg",
+        "title": "The Heavy Bear Who Goes with Me",
+        "price": 50.99,
+        "author": "Brendan Kennelly,Neil Astley",
+        "description": "The Heavy Bear Who Goes With Me is the ultimate reader's companion to poetry: a selection of 100 classic poems from five centuries with lively 'companion' commentaries to go with and illuminate each poem. The heavy bear can be many things which go with the bearer: another self or alter ego, the burden of poetry or art, what weighs us down and makes us do what we don't really want to do as well as what pulls us back to our selves, the animal side which makes us bearable or human."
+    },
+    {
+        "id": 3,
+        "icon": "https://cdn.dc5.ro/img-prod/919633424-0-240.jpeg",
+        "title": "The Children of D'Hara",
+        "price": 30,
+        "author": "Terry Goodkind",
+        "description": "Richard Rahl and Kahlan Amnell confront an apocalyptic nightmare in this irresistibly tense, utterly terrifying, near-thousand-page return to Terry Goodkind's 26-million-copy bestselling Sword of Truth world."
+    },
+    {
+        "id": 4,
+        "icon": "https://cdn.dc5.ro/img-prod/1717626069-0-240.jpeg",
+        "title": "The Amazing Spider-Man",
+        "price": 42.45,
+        "author": "Stan Lee,Steve Ditko",
+        "description": "It is impossible to imagine American popular culture without Marvel Comics. For decades, Marvel has published groundbreaking visual narratives that sustain attention on multiple levels: as metaphors for the experience of difference and otherness; as meditations on the fluid nature of identity; and as high-water marks in the artistic tradition of American cartooning, to name a few."
+    },
+    {
+        "id": 5,
+        "icon": "https://cdn.dc5.ro/img-prod/1634174381-1-240.jpeg",
+        "title": "The Atlas Six ",
+        "price": 17.99,
+        "author": "Olivie Blake",
+        "description": "When the world's best magicians are offered an extraordinary opportunity, saying yes is easy. Each could join the secretive Alexandrian Society, whose custodians guard lost knowledge from ancient civilizations. Their members enjoy a lifetime of power and prestige. Yet each decade, only six practitioners are invited - to fill five places."
+    },
+    {
+        "id": 6,
+        "icon": "https://cdn.dc5.ro/img-prod/1519573965-0-240.jpeg",
+        "title": "Singur",
+        "price": 12.99,
+        "author": "Tatiana Niculescu",
+        "description": "„Viața e simplă“ era deviza lui de tinerețe. Născut într-o familie de evrei cu veche tradiție în Țările Române, Mihail Sebastian a trăit însă în cea mai zbuciumată epocă din istoria modernă a Europei. S-a născut la Brăila, înaintea Primului Război Mondial, a citit, a scris, a iubit și a călătorit înaintea celui de al Doilea, a cunoscut teroarea antisemită părăsit de prieteni și a murit pe neașteptate în zorii așezării lumii în matca totalitarismului sovietic. Reconstituirea acestei vieți împletește cu măiestrie contextul istoric și intelectual al vremii cu scrierile gazetărești, cu lecturile, romanele, piesele de teatru și Jurnalul lui, într-un portret mai actual ca oricând pentru Europa zilelor noastre"
+    }
+]

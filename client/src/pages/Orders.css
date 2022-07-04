@@ -1,0 +1,25 @@
+.orders {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.orders-container {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+	height: 700px;
+}
+.orders-title {
+	font: normal normal bold 38px/46px Lora;
+	color: #262626;
+	margin-bottom: 32px;
+}
+.orders-empty-message {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgb(156, 156, 156);
+	font-size: 36px;
+	border: 2px solid rgb(156, 156, 156);
+}

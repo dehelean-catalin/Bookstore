@@ -1,0 +1,39 @@
+.carousel {
+	width: 97%;
+	height: 794px;
+	display: flex;
+	justify-content: center;
+	background-color: #f3f1ee;
+}
+
+.slide {
+	display: none;
+}
+
+.slide-active {
+	width: 80%;
+	height: 85%;
+	display: flex;
+	align-items: center;
+}
+.carousel-image {
+	width: 650px;
+	height: 453.78px;
+	margin-left: 188px;
+	border-radius: 50%;
+}
+
+.carousel-container {
+	width: 652px;
+}
+.carousel-title {
+	font: normal normal bold 64px/82px Lora;
+	color: #000000;
+	margin: 0px;
+}
+.carousel-description {
+	color: #262626;
+	font: normal normal normal 20px/28px Roboto;
+	margin-top: 25px;
+	padding-right: 50px;
+}
