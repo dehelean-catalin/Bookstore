@@ -1,83 +1,141 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./OrdersForm.css";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import { useInput } from "../hooks/use-input";
 import { OrdersContext } from "../store/orders-context";
+import { OrderDetails } from "../pages/OrderDetails";
+
+const DEFAULT_INITIAL_VALUES = {
+	firstName: "",
+	lastName: "",
+	billingCountry: "",
+	billingAddress: "",
+	billingPhone: "",
+	deliveryCountry: "",
+	deliveryAddress: "",
+	deliveryPhone: "",
+	deliveryDate: "",
+	payMethod: "",
+	observation: "",
+	recomandation: "",
+};
 export const OrdersForm = () => {
 	const { order } = useContext(OrdersContext);
+	const { id: orderId } = useParams();
+	const [initialValues, setIntialValues] = useState(DEFAULT_INITIAL_VALUES);
+	useEffect(() => {
+		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json")
+			.then((response) => {
+				let loadedShoppingCart = [];
+				for (const key in response.data) {
+					loadedShoppingCart.push({
+						id: response.data[key].id,
+						price: response.data[key].price,
+						items: response.data[key].items,
+						costumerDetails: response.data[key].costumerDetails,
+						delveryStatus: response.data[key].deliveryStatus,
+					});
+				}
+				console.log(loadedShoppingCart);
+				if (loadedShoppingCart.find((order) => order.id === +orderId)) {
+					setIntialValues({
+						firstName: "asas",
+						lastName: "aaaaa",
+						billingCountry: "Romania",
+						billingAddress: "aaa",
+						billingPhone: "aaaa",
+						deliveryCountry: "Romania",
+						deliveryAddress: "Str Principala",
+						deliveryPhone: "0763720901",
+						deliveryDate: "",
+						payMethod: "payMethodValue",
+						observation: "observationsValue",
+						recomandation: "recomandation",
+					});
+				}
+			})
+			.catch((err) => {
+				console.log(err.response.data);
+			});
+	}, []);
+
 	let navigate = useNavigate();
+
 	const {
 		value: firstNameValue,
 		hasError: firstNameError,
 		isValid: firstNameValid,
 		valueChangeHandler: firstNameChangeHandler,
 		inputBlurHandler: firstNameBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.firstName);
 	const {
 		value: lastNameValue,
 		hasError: lastNameError,
 		isValid: lastNameValid,
 		valueChangeHandler: lastNameChangehandler,
 		inputBlurHandler: lastNameBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.lastName);
 	const {
 		value: billingCountryValue,
 		isValid: billingCountryValid,
 		hasError: billingCountryError,
 		valueChangeHandler: billingCountryChangehandler,
 		inputBlurHandler: billingCountryBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.billingCountry);
 	const {
 		value: billingAddressValue,
 		isValid: billingAddressValid,
 		hasError: billingAddressError,
 		valueChangeHandler: billingAddressChangehandler,
 		inputBlurHandler: billingAddressBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.billingCountry);
 	const {
 		value: billingPhoneValue,
 		isValid: billingPhoneValid,
 		hasError: billingPhoneError,
 		valueChangeHandler: billingPhoneChangehandler,
 		inputBlurHandler: billingPhoneBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.billingPhone);
 	const {
 		value: deliveryCountryValue,
 		isValid: deliveryCountryValid,
 		hasError: deliveryCountryError,
 		valueChangeHandler: deliveryCountryChangehandler,
 		inputBlurHandler: deliveryCountryBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.deliveryCountry);
 	const {
 		value: deliveryAddressValue,
 		isValid: deliveryAddressValid,
 		hasError: deliveryAddressError,
 		valueChangeHandler: deliveryAddressChangehandler,
 		inputBlurHandler: deliveryAddressBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.deliveryAddress);
 	const {
 		value: deliveryDateValue,
 		isValid: deliveryDateValid,
 		hasError: deliveryDateError,
 		valueChangeHandler: deliveryDateChangehandler,
 		inputBlurHandler: deliveryDateBlurHandler,
-	} = useInput((value) => value.trim() !== "");
+	} = useInput((value) => value.trim() !== "", initialValues.deliveryDate);
 	const {
 		value: deliveryPhoneValue,
 		isValid: deliveryPhoneValid,
 		hasError: deliveryPhoneError,
 		valueChangeHandler: deliveryPhoneChangehandler,
 		inputBlurHandler: deliveryPhoneBlurHandler,
-	} = useInput((value) => value.trim() !== "");
-	const { value: observationsValue, valueChangeHandler: observationsChangehandler } = useInput(
-		(value) => value.trim() !== ""
-	);
-	const { id: orderId } = useParams();
+	} = useInput((value) => value.trim() !== "", initialValues.deliveryPhone);
+
 	const { value: payMethodValue, isValid: payMethodValid, valueChangeHandler: payMethodChangehandler } = useInput(
-		(value) => value.trim() !== ""
+		(value) => value.trim() !== "",
+		initialValues.payMethod
 	);
+	const { value: observationsValue, valueChangeHandler: observationsChangehandler } = useInput(
+		(value) => value.trim() !== "",
+		initialValues.observation
+	);
+
 	const [recomandation, setRecomandation] = useState(false);
 	const [isAddressDeliveryBtnActive, setIsAddressDeliveryBtnActive] = useState(false);
 
@@ -111,34 +169,36 @@ export const OrdersForm = () => {
 
 	const submitHandler = (e) => {
 		e.preventDefault();
-
-		Axios.post("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json", order)
+		const costumerDetails = {
+			firstName: firstNameValue,
+			lastName: lastNameValue,
+			billingCountry: billingCountryValue,
+			billingAddress: billingAddressValue,
+			billingPhone: billingPhoneValue,
+			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
+			deliveryCountry: isAddressDeliveryBtnActive ? billingCountryValue : deliveryCountryValue,
+			deliveryAddress: isAddressDeliveryBtnActive ? billingAddressValue : deliveryAddressValue,
+			deliveryPhone: isAddressDeliveryBtnActive ? billingPhoneValue : deliveryPhoneValue,
+			payMethod: payMethodValue,
+			observation: observationsValue,
+			recomandation: recomandation,
+		};
+		Axios.post("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json", {
+			...order,
+			costumerDetails,
+		})
 			.then(() => {
 				navigate("/orders");
+				Axios.delete(
+					"https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json"
+				).catch((err) => {
+					console.log(err.response.data);
+				});
 			})
 			.catch((err) => {
 				console.log(err.response.data);
 			});
-		Axios.delete(
-			"https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json"
-		).catch((err) => {
-			console.log(err.response.data);
-		});
 	};
-	// console.log({
-	// 	id: orderId,
-	// 	firstName: firstNameValue,
-	// 	lastName: lastNameValue,
-	// 	billingCountry: billingCountryValue,
-	// 	billingAddress: billingAddressValue,
-	// 	billingPhone: billingPhoneValue,
-	// 	deliveryCountry: isAddressDeliveryBtnActive ? billingCountryValue : deliveryCountryValue,
-	// 	deliveryAddress: isAddressDeliveryBtnActive ? billingAddressValue : deliveryAddressValue,
-	// 	deliveryPhone: deliveryPhoneValue,
-	// 	payMethod: payMethodValue,
-	// 	observation: observationsValue,
-	// 	recomandation: recomandation,
-	// });
 
 	return (
 		<form className="form" onSubmit={submitHandler}>

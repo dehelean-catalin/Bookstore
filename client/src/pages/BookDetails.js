@@ -12,11 +12,12 @@ export const BookDetails = () => {
 		Axios.get(`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/books/${id}.json`)
 			.then((response) => {
 				setBookDetails(response.data);
-				setIsLoading(false);
 			})
 			.catch((err) => {
-				console.log(err.response.data);
 				setHttpError(err.response.data);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, []);
 	if (httpError) {

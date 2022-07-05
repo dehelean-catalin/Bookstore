@@ -11,12 +11,45 @@ import { BookDetails } from "./pages/BookDetails";
 import { OrderDetails } from "./pages/OrderDetails";
 import { ShoppingCartContext } from "./store/shopping-cart-context";
 import { OrdersContext } from "./store/orders-context";
-
+import Axios from "axios";
 function App() {
 	const [products, setProduct] = useState([]);
 	const [order, setOrder] = useState();
+
+	const deleteItemFromShoppingCart = (id) => {
+		Axios.delete(`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${id}.json`)
+			.then(() => {
+				Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json")
+					.then((response) => {
+						let loadedShoppingCart = [];
+						for (const key in response.data) {
+							loadedShoppingCart.push({
+								id: key,
+								title: response.data[key].title,
+								price: response.data[key].price,
+								icon: response.data[key].icon,
+								author: response.data[key].author,
+							});
+						}
+						setProduct(loadedShoppingCart);
+					})
+					.catch((err) => {
+						console.log(err.response.data);
+					});
+			})
+			.catch((err) => {
+				console.log(err.response.data);
+			});
+	};
+
 	return (
-		<ShoppingCartContext.Provider value={{ handleShoppingCart: setProduct, products: products }}>
+		<ShoppingCartContext.Provider
+			value={{
+				handleShoppingCart: setProduct,
+				products: products,
+				deleteItemFromShoppingCart: deleteItemFromShoppingCart,
+			}}
+		>
 			<OrdersContext.Provider value={{ orderHandler: setOrder, order: order }}>
 				<div className="App">
 					<BrowserRouter>

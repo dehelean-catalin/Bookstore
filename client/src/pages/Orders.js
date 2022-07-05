@@ -18,13 +18,11 @@ export const Orders = () => {
 					});
 				}
 				setOrdersList(loadedOrders);
-				console.log(response.data);
 			})
 			.catch((err) => {
 				console.log(err.response.data);
 			});
 	}, []);
-	console.log("laal");
 	return (
 		<div className="orders">
 			<div className="orders-container">

@@ -23,10 +23,12 @@ export const HomePage = () => {
 					});
 				}
 				setBooks(loadedBooks);
-				setIsLoading(false);
 			})
 			.catch((err) => {
 				setHttpError(err.response.data);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, []);
 	if (httpError) {

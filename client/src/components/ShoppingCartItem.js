@@ -1,21 +1,11 @@
 import React, { useContext } from "react";
 import "./ShoppingCartItem.css";
 import { IoTrashOutline } from "react-icons/io5";
-import Axios from "axios";
-import { RemoveContext } from "../store/remove-context";
+
+import { ShoppingCartContext } from "../store/shopping-cart-context";
 export const ShoppingCartItem = ({ book }) => {
 	const { id, icon, title, author, price } = book;
-	const { removeHandler, remove } = useContext(RemoveContext);
-	const handleRemove = () => {
-		Axios.delete(`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${id}.json`)
-			.then((response) => {
-				console.log(response);
-				removeHandler(remove + 1);
-			})
-			.catch((err) => {
-				console.log(err.response.data);
-			});
-	};
+	const { deleteItemFromShoppingCart } = useContext(ShoppingCartContext);
 
 	return (
 		<div className="shopping-cart-item">
@@ -31,7 +21,7 @@ export const ShoppingCartItem = ({ book }) => {
 			</div>
 			<div className="shopping-cart-item-price">
 				<div className="book-price">${price}</div>
-				<button className="remove-btn" onClick={handleRemove}>
+				<button className="remove-btn" onClick={() => deleteItemFromShoppingCart(id)}>
 					<IoTrashOutline className="trash-icon" />
 					Remove
 				</button>
