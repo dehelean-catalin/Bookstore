@@ -38,21 +38,37 @@ export const OrdersForm = () => {
 						delveryStatus: response.data[key].deliveryStatus,
 					});
 				}
-				console.log(loadedShoppingCart);
+
 				if (loadedShoppingCart.find((order) => order.id === +orderId)) {
+					const { costumerDetails } = loadedShoppingCart.find((order) => order.id === +orderId);
+					console.log(costumerDetails);
+					const {
+						firstName,
+						lastName,
+						billingCountry,
+						billingAddress,
+						billingPhone,
+						deliveryCountry,
+						deliveryAddress,
+						deliveryPhone,
+						deliveryDate,
+						payMethod,
+						observation,
+						recomandation,
+					} = costumerDetails;
 					setIntialValues({
-						firstName: "asas",
-						lastName: "aaaaa",
-						billingCountry: "Romania",
-						billingAddress: "aaa",
-						billingPhone: "aaaa",
-						deliveryCountry: "Romania",
-						deliveryAddress: "Str Principala",
-						deliveryPhone: "0763720901",
-						deliveryDate: "",
-						payMethod: "payMethodValue",
-						observation: "observationsValue",
-						recomandation: "recomandation",
+						firstName: firstName,
+						lastName: lastName,
+						billingCountry: billingCountry,
+						billingAddress: billingAddress,
+						billingPhone: billingPhone,
+						deliveryCountry: deliveryCountry,
+						deliveryAddress: deliveryAddress,
+						deliveryPhone: deliveryPhone,
+						deliveryDate: deliveryDate,
+						payMethod: payMethod,
+						observation: observation,
+						recomandation: recomandation,
 					});
 				}
 			})
@@ -90,7 +106,7 @@ export const OrdersForm = () => {
 		hasError: billingAddressError,
 		valueChangeHandler: billingAddressChangehandler,
 		inputBlurHandler: billingAddressBlurHandler,
-	} = useInput((value) => value.trim() !== "", initialValues.billingCountry);
+	} = useInput((value) => value.trim() !== "", initialValues.billingAddress);
 	const {
 		value: billingPhoneValue,
 		isValid: billingPhoneValid,
@@ -113,19 +129,19 @@ export const OrdersForm = () => {
 		inputBlurHandler: deliveryAddressBlurHandler,
 	} = useInput((value) => value.trim() !== "", initialValues.deliveryAddress);
 	const {
-		value: deliveryDateValue,
-		isValid: deliveryDateValid,
-		hasError: deliveryDateError,
-		valueChangeHandler: deliveryDateChangehandler,
-		inputBlurHandler: deliveryDateBlurHandler,
-	} = useInput((value) => value.trim() !== "", initialValues.deliveryDate);
-	const {
 		value: deliveryPhoneValue,
 		isValid: deliveryPhoneValid,
 		hasError: deliveryPhoneError,
 		valueChangeHandler: deliveryPhoneChangehandler,
 		inputBlurHandler: deliveryPhoneBlurHandler,
 	} = useInput((value) => value.trim() !== "", initialValues.deliveryPhone);
+	const {
+		value: deliveryDateValue,
+		isValid: deliveryDateValid,
+		hasError: deliveryDateError,
+		valueChangeHandler: deliveryDateChangehandler,
+		inputBlurHandler: deliveryDateBlurHandler,
+	} = useInput((value) => value.trim() !== "", initialValues.deliveryDate);
 
 	const { value: payMethodValue, isValid: payMethodValid, valueChangeHandler: payMethodChangehandler } = useInput(
 		(value) => value.trim() !== "",
@@ -179,6 +195,7 @@ export const OrdersForm = () => {
 			deliveryCountry: isAddressDeliveryBtnActive ? billingCountryValue : deliveryCountryValue,
 			deliveryAddress: isAddressDeliveryBtnActive ? billingAddressValue : deliveryAddressValue,
 			deliveryPhone: isAddressDeliveryBtnActive ? billingPhoneValue : deliveryPhoneValue,
+			deliveryDate: deliveryDateValue,
 			payMethod: payMethodValue,
 			observation: observationsValue,
 			recomandation: recomandation,
