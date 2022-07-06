@@ -1,12 +1,12 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useInput } from "../hooks/use-input";
 import flyingBook from "../images/flyingBook.jpg";
-import "./Login.css";
-export const Login = () => {
+import "./Register.css";
+export const Register = () => {
 	const [registerEmailErrorMessage, setRegisterEmailErrorMessage] = useState("");
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
 	const {
 		value: registerEmailValue,
 		hasError: registerEmailError,
@@ -21,6 +21,13 @@ export const Login = () => {
 		valueChangeHandler: passwordHandler,
 		inputBlurHandler: passwordBlurHandler,
 	} = useInput((value) => value.trim() !== "" && value.length >= 6, "");
+	const {
+		value: confirmPasswordValue,
+		hasError: confirmPasswordError,
+		isValid: confirmPasswordValid,
+		valueChangeHandler: confirmPasswordHandler,
+		inputBlurHandler: confirmPasswordBlurHandler,
+	} = useInput((value) => value.trim() !== "" && value === passwordValue, "");
 
 	const validateEmail = () => {
 		if (registerEmailError && registerEmailValue.trim() === "") {
@@ -50,10 +57,23 @@ export const Login = () => {
 		validatePassword();
 	}, [passwordValue, passwordError]);
 
-	const registerEmailClass = registerEmailErrorMessage ? "login-input-invalid" : "login-input-valid";
-	const passwordClass = passwordErrorMessage ? "login-input-invalid" : "login-input-valid";
+	const validateConfirmPassword = () => {
+		if (confirmPasswordError && confirmPasswordValue !== passwordValue) {
+			setConfirmPasswordErrorMessage("doesn't match");
+		} else {
+			setConfirmPasswordErrorMessage("");
+		}
+	};
 
-	const isFormValid = !registerEmailValid || !passwordValid || registerEmailErrorMessage;
+	useEffect(() => {
+		validateConfirmPassword();
+	}, [confirmPasswordValue, confirmPasswordError]);
+
+	const registerEmailClass = registerEmailErrorMessage ? "register-email-invalid" : "register-email-valid";
+	const passwordClass = passwordErrorMessage ? "register-email-invalid" : "register-email-valid";
+	const confirmPasswordClass = confirmPasswordErrorMessage ? "register-email-invalid" : "register-email-valid";
+
+	const isFormValid = !registerEmailValid || !passwordValid || !confirmPasswordValid || registerEmailErrorMessage;
 
 	const submitHandler = (event) => {
 		event.preventDefault();
@@ -74,11 +94,11 @@ export const Login = () => {
 			});
 	};
 	return (
-		<div className="login">
-			<img src={flyingBook} className="login-image" alt="not found" />
-			<form className="login-form" onSubmit={submitHandler}>
-				<div className="login-title">Login</div>
-				<div className="login-subtitle">Use a local account to log in</div>
+		<div className="register">
+			<img src={flyingBook} className="register-image" alt="not found" />
+			<form className="register-form" onSubmit={submitHandler}>
+				<div className="register-title">Register</div>
+				<div className="register-subtitle">Create new account</div>
 
 				<label className="label-form">Email</label>
 				<input
@@ -101,15 +121,22 @@ export const Login = () => {
 					onBlur={passwordBlurHandler}
 				/>
 				<div className="error-message"> {passwordErrorMessage}</div>
-				<div className="input-checkbox-container">
-					<input type="checkbox" />
-					<div>Remember me?</div>
-				</div>
-				<button type="submit" className="login-btn" disabled={isFormValid}>
-					Login
+
+				<label className="label-form">Confirm Password</label>
+				<input
+					type="password"
+					className={confirmPasswordClass}
+					placeholder="Confirm Password"
+					value={confirmPasswordValue}
+					onChange={confirmPasswordHandler}
+					onBlur={confirmPasswordBlurHandler}
+					disabled={!passwordValid}
+				/>
+				<div className="error-message"> {confirmPasswordErrorMessage}</div>
+
+				<button type="submit" className="register-btn" disabled={isFormValid}>
+					Register
 				</button>
-				<Link to="/">Forgot your password</Link>
-				<Link to="/register">Register as new user</Link>
 			</form>
 		</div>
 	);

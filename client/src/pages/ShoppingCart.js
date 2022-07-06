@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ShoppingCartList } from "../components/ShoppingCartList";
 import { Link } from "react-router-dom";
 import "./ShoppingCart.css";
@@ -9,6 +9,8 @@ import { ShoppingCartContext } from "../store/shopping-cart-context";
 export const ShoppingCart = () => {
 	const { orderHandler } = useContext(OrdersContext);
 	const { handleShoppingCart, products } = useContext(ShoppingCartContext);
+	const [isLoading, setIsLoading] = useState(true);
+	const [httpError, setHttpError] = useState(null);
 	useEffect(() => {
 		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json")
 			.then((response) => {
@@ -25,7 +27,10 @@ export const ShoppingCart = () => {
 				handleShoppingCart(loadedShoppingCart);
 			})
 			.catch((err) => {
-				console.log(err.response.data);
+				setHttpError(err.response.data);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, []);
 	const priceValues = products.map((item) => item.price);
@@ -41,6 +46,20 @@ export const ShoppingCart = () => {
 			price: totalPrice,
 		});
 	};
+	if (httpError) {
+		return (
+			<div className="shopping-cart">
+				<div className="home-page-error">{httpError}</div>
+			</div>
+		);
+	}
+	if (isLoading) {
+		return (
+			<div className="shopping-cart">
+				<div className="home-page-loading">Loading ...</div>
+			</div>
+		);
+	}
 	return (
 		<div className="shopping-cart">
 			<div className="shopping-cart-container">

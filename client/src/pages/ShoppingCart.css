@@ -75,3 +75,13 @@
 .place-order-btn:hover {
 	cursor: pointer;
 }
+.home-page-loading {
+	font-size: 50px;
+	font-weight: 700;
+	color: #4e4e4e;
+}
+.home-page-error {
+	font-size: 50px;
+	font-weight: 700;
+	color: #ff3e3e;
+}

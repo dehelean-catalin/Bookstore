@@ -12,6 +12,7 @@ import { OrderDetails } from "./pages/OrderDetails";
 import { ShoppingCartContext } from "./store/shopping-cart-context";
 import { OrdersContext } from "./store/orders-context";
 import Axios from "axios";
+import { Register } from "./pages/Register";
 function App() {
 	const [products, setProduct] = useState([]);
 	const [order, setOrder] = useState();
@@ -59,6 +60,7 @@ function App() {
 							<Route path="/cart" element={<ShoppingCart />} />
 							<Route path="/orders" element={<Orders />} />
 							<Route path="/login" element={<Login />} />
+							<Route path="/register" element={<Register />} />
 							<Route path="/view-book/:id" element={<BookDetails />} />
 							<Route path="/order-details/:id" element={<OrderDetails />} />
 						</Routes>

@@ -158,3 +158,17 @@ textarea {
 	border: 1px solid #db1515;
 	border-radius: 4px;
 }
+.form-error {
+	width: 792px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #cc4a4a;
+}
+.orders-details-loading {
+	width: 792px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #595959;
+}

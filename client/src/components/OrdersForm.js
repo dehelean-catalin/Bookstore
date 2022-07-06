@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Children, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./OrdersForm.css";
 import { Link } from "react-router-dom";
@@ -6,6 +6,7 @@ import Axios from "axios";
 import { useInput } from "../hooks/use-input";
 import { OrdersContext } from "../store/orders-context";
 import { OrderDetails } from "../pages/OrderDetails";
+import { OrdersItem } from "./OrdersItem";
 
 const DEFAULT_INITIAL_VALUES = {
 	firstName: "",
@@ -23,23 +24,34 @@ const DEFAULT_INITIAL_VALUES = {
 };
 export const OrdersForm = () => {
 	const { order } = useContext(OrdersContext);
+	const [orderInformation, setOrderInformation] = useState({});
 	const { id: orderId } = useParams();
 	const [initialValues, setIntialValues] = useState(DEFAULT_INITIAL_VALUES);
+	const [updateForm, setUpdateForm] = useState(false);
+	const [idNotFoundError, setIdNotFoundError] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [httpError, setHttpError] = useState(null);
+
 	useEffect(() => {
 		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json")
 			.then((response) => {
 				let loadedShoppingCart = [];
 				for (const key in response.data) {
 					loadedShoppingCart.push({
+						key: key,
 						id: response.data[key].id,
 						price: response.data[key].price,
 						items: response.data[key].items,
 						costumerDetails: response.data[key].costumerDetails,
-						delveryStatus: response.data[key].deliveryStatus,
+						deliveryStatus: response.data[key].deliveryStatus,
 					});
 				}
-
+				setOrderInformation(loadedShoppingCart.find((order) => order.id === +orderId));
+				if (!(order || loadedShoppingCart.find((order) => order.id === +orderId))) {
+					setIdNotFoundError(true);
+				}
 				if (loadedShoppingCart.find((order) => order.id === +orderId)) {
+					setUpdateForm(true);
 					const { costumerDetails } = loadedShoppingCart.find((order) => order.id === +orderId);
 					console.log(costumerDetails);
 					const {
@@ -55,6 +67,7 @@ export const OrdersForm = () => {
 						payMethod,
 						observation,
 						recomandation,
+						isAddressDeliveryBtnActive,
 					} = costumerDetails;
 					setIntialValues({
 						firstName: firstName,
@@ -69,14 +82,18 @@ export const OrdersForm = () => {
 						payMethod: payMethod,
 						observation: observation,
 						recomandation: recomandation,
+						isDeliveryBtnActive: isAddressDeliveryBtnActive,
 					});
 				}
 			})
 			.catch((err) => {
-				console.log(err.response.data);
+				setHttpError(err.response.data);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, []);
-
+	console.log(orderInformation);
 	let navigate = useNavigate();
 
 	const {
@@ -157,13 +174,9 @@ export const OrdersForm = () => {
 
 	const inputFirstName = !firstNameError ? "cd-input-valid" : "cd-input-invalid";
 	const inputLastName = !lastNameError ? "cd-input-valid" : "cd-input-invalid";
-
 	const inputBillingCountry = !billingCountryError ? "form-select-valid" : "form-select-invalid";
 	const inputBillingAddress = !billingAddressError ? "address-input-valid" : "address-input-invalid";
 	const inputBillingPhone = !billingPhoneError ? "address-input-valid" : "address-input-invalid";
-	const deliveryAddresHandler = (e) => {
-		setIsAddressDeliveryBtnActive(!isAddressDeliveryBtnActive);
-	};
 
 	const inputDeliveryCountry =
 		!deliveryCountryError || isAddressDeliveryBtnActive ? "form-select-valid" : "form-select-invalid";
@@ -183,7 +196,10 @@ export const OrdersForm = () => {
 		!deliveryDateValid ||
 		!payMethodValid;
 
-	const submitHandler = (e) => {
+	const deliveryAddresHandler = () => {
+		setIsAddressDeliveryBtnActive(!isAddressDeliveryBtnActive);
+	};
+	const placeOrderHandler = (e) => {
 		e.preventDefault();
 		const costumerDetails = {
 			firstName: firstNameValue,
@@ -195,6 +211,7 @@ export const OrdersForm = () => {
 			deliveryCountry: isAddressDeliveryBtnActive ? billingCountryValue : deliveryCountryValue,
 			deliveryAddress: isAddressDeliveryBtnActive ? billingAddressValue : deliveryAddressValue,
 			deliveryPhone: isAddressDeliveryBtnActive ? billingPhoneValue : deliveryPhoneValue,
+			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
 			deliveryDate: deliveryDateValue,
 			payMethod: payMethodValue,
 			observation: observationsValue,
@@ -216,7 +233,67 @@ export const OrdersForm = () => {
 				console.log(err.response.data);
 			});
 	};
+	const updateOrderHandler = (e) => {
+		e.preventDefault();
+		console.log("update");
+		const costumerDetails = {
+			firstName: firstNameValue,
+			lastName: lastNameValue,
+			billingCountry: billingCountryValue,
+			billingAddress: billingAddressValue,
+			billingPhone: billingPhoneValue,
+			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
+			deliveryCountry: isAddressDeliveryBtnActive ? billingCountryValue : deliveryCountryValue,
+			deliveryAddress: isAddressDeliveryBtnActive ? billingAddressValue : deliveryAddressValue,
+			deliveryPhone: isAddressDeliveryBtnActive ? billingPhoneValue : deliveryPhoneValue,
+			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
+			deliveryDate: deliveryDateValue,
+			payMethod: payMethodValue,
+			observation: observationsValue,
+			recomandation: recomandation,
+		};
+		const { id, items, price, deliveryStatus } = orderInformation;
+		console.log(id);
+		Axios.put(
+			`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders/${orderInformation.key}.json`,
+			{
+				id: id,
+				items: items,
+				price: price,
+				deliveryStatus: deliveryStatus,
+				costumerDetails,
+			}
+		)
+			.then(() => {
+				navigate("/orders");
+			})
+			.catch((err) => {
+				console.log(err.response.data);
+			});
+	};
+	const submitHandler = updateForm ? updateOrderHandler : placeOrderHandler;
 
+	if (idNotFoundError) {
+		return (
+			<div className="form-error">
+				<h1>Id not found</h1>
+			</div>
+		);
+	}
+	if (httpError) {
+		return (
+			<div className="form-error">
+				<h1>{httpError}</h1>
+			</div>
+		);
+	}
+	if (isLoading) {
+		return (
+			<div className="orders-details-loading">
+				<h1>Loading ...</h1>
+			</div>
+		);
+	}
 	return (
 		<form className="form" onSubmit={submitHandler}>
 			<div className="form-title">Order Details</div>
@@ -276,6 +353,7 @@ export const OrdersForm = () => {
 					type="checkbox"
 					onClick={deliveryAddresHandler}
 					disabled={!billingAddressValue || !billingCountryValue || !billingPhoneValue}
+					checked={initialValues.isDeliveryBtnActive || isAddressDeliveryBtnActive}
 				/>
 				<label>Use address for delivery </label>
 			</div>
@@ -347,10 +425,16 @@ export const OrdersForm = () => {
 				<Link to="/cart" className="cancel-btn">
 					Cancel Order
 				</Link>
-
-				<button type="submit" className="plc-order-btn" disabled={isFormValid}>
-					Place Order
-				</button>
+				{!updateForm && (
+					<button type="submit" className="plc-order-btn" disabled={isFormValid}>
+						Place Order
+					</button>
+				)}
+				{updateForm && (
+					<button type="submit" className="plc-order-btn" disabled={isFormValid}>
+						Update Order
+					</button>
+				)}
 			</div>
 		</form>
 	);

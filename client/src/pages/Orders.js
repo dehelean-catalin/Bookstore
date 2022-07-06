@@ -5,6 +5,8 @@ import Axios from "axios";
 import "./Orders.css";
 export const Orders = () => {
 	const [ordersList, setOrdersList] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [httpError, setHttpError] = useState(null);
 	useEffect(() => {
 		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json")
 			.then((response) => {
@@ -20,9 +22,26 @@ export const Orders = () => {
 				setOrdersList(loadedOrders);
 			})
 			.catch((err) => {
-				console.log(err.response.data);
+				setHttpError(err.response.data);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, []);
+	if (httpError) {
+		return (
+			<div className="orders">
+				<div className="home-page-error">{httpError}</div>
+			</div>
+		);
+	}
+	if (isLoading) {
+		return (
+			<div className="orders">
+				<div className="home-page-loading">Loading ...</div>
+			</div>
+		);
+	}
 	return (
 		<div className="orders">
 			<div className="orders-container">
