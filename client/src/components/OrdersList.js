@@ -5,7 +5,7 @@ export const OrdersList = ({ ordersList }) => {
 	return (
 		<div className="orders-list">
 			{ordersList.map((order, key) => (
-				<OrdersItem key={key} order={order} />
+				<OrdersItem key={order.id} order={order} />
 			))}
 		</div>
 	);

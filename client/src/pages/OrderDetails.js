@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { OrdersForm } from "../components/OrdersForm";
 import { OrdersImage } from "../components/OrdersImage";
-import { OrdersContext } from "../store/orders-context";
 import "./OrderDetails.css";
 export const OrderDetails = () => {
 	return (

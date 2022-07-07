@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { ShoppingCartList } from "../components/ShoppingCartList";
 import { Link } from "react-router-dom";
 import "./ShoppingCart.css";
@@ -6,33 +6,35 @@ import { HiOutlineEmojiSad } from "react-icons/hi";
 import { OrdersContext } from "../store/orders-context";
 import Axios from "axios";
 import { ShoppingCartContext } from "../store/shopping-cart-context";
+import { useHttp } from "../hooks/use-http";
 export const ShoppingCart = () => {
 	const { orderHandler } = useContext(OrdersContext);
 	const { handleShoppingCart, products } = useContext(ShoppingCartContext);
-	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState(null);
-	useEffect(() => {
-		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json")
-			.then((response) => {
-				let loadedShoppingCart = [];
-				for (const key in response.data) {
-					loadedShoppingCart.push({
-						id: key,
-						title: response.data[key].title,
-						price: response.data[key].price,
-						icon: response.data[key].icon,
-						author: response.data[key].author,
-					});
-				}
-				handleShoppingCart(loadedShoppingCart);
-			})
-			.catch((err) => {
-				setHttpError(err.response.data);
-			})
-			.finally(() => {
-				setIsLoading(false);
+	const shoppingCardData = (items) => {
+		let loadedData = [];
+		for (const key in items) {
+			loadedData.push({
+				id: key,
+				title: items[key].title,
+				price: items[key].price,
+				icon: items[key].icon,
+				author: items[key].author,
+				description: items[key].description,
 			});
+		}
+		handleShoppingCart(loadedData);
+	};
+	const { sendRequest, httpError, isLoading } = useHttp(
+		{
+			url: "https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json",
+			httpMethod: Axios.get,
+		},
+		shoppingCardData
+	);
+	useEffect(() => {
+		sendRequest();
 	}, []);
+
 	const priceValues = products.map((item) => item.price);
 	const totalPrice = priceValues.reduce((a, b) => a + b, 0).toFixed(2);
 	const orderId = Math.floor(Math.random() * 90000) + 10000;

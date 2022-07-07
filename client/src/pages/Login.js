@@ -1,18 +1,21 @@
 import Axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/use-input";
 import flyingBook from "../images/flyingBook.jpg";
+import { AuthContext } from "../store/auth-context";
 import "./Login.css";
 export const Login = () => {
-	const [registerEmailErrorMessage, setRegisterEmailErrorMessage] = useState("");
+	let navigate = useNavigate();
+	const { authenticationHandler } = useContext(AuthContext);
+	const [loginEmailErrorMessage, setLoginEmailErrorMessage] = useState("");
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 	const {
-		value: registerEmailValue,
-		hasError: registerEmailError,
-		isValid: registerEmailValid,
-		valueChangeHandler: registerEmailHandler,
-		inputBlurHandler: registerEmailBlurHandler,
+		value: loginEmailValue,
+		hasError: loginEmailError,
+		isValid: loginEmailValid,
+		valueChangeHandler: loginEmailHandler,
+		inputBlurHandler: loginEmailBlurHandler,
 	} = useInput((value) => value.trim() !== "" && value.includes("@") === true, "");
 	const {
 		value: passwordValue,
@@ -23,18 +26,18 @@ export const Login = () => {
 	} = useInput((value) => value.trim() !== "" && value.length >= 6, "");
 
 	const validateEmail = () => {
-		if (registerEmailError && registerEmailValue.trim() === "") {
-			setRegisterEmailErrorMessage("Empty");
-		} else if (registerEmailError && registerEmailValue.includes("@") === false) {
-			setRegisterEmailErrorMessage("Not an email format");
+		if (loginEmailError && loginEmailValue.trim() === "") {
+			setLoginEmailErrorMessage("Empty");
+		} else if (loginEmailError && loginEmailValue.includes("@") === false) {
+			setLoginEmailErrorMessage("Not an email format");
 		} else {
-			setRegisterEmailErrorMessage("");
+			setLoginEmailErrorMessage("");
 		}
 	};
 
 	useEffect(() => {
 		validateEmail();
-	}, [registerEmailValue, registerEmailError]);
+	}, [loginEmailValue, loginEmailError]);
 
 	const validatePassword = () => {
 		if (passwordError && passwordValue.trim() === "") {
@@ -50,27 +53,32 @@ export const Login = () => {
 		validatePassword();
 	}, [passwordValue, passwordError]);
 
-	const registerEmailClass = registerEmailErrorMessage ? "login-input-invalid" : "login-input-valid";
+	const loginEmailClass = loginEmailErrorMessage ? "login-input-invalid" : "login-input-valid";
 	const passwordClass = passwordErrorMessage ? "login-input-invalid" : "login-input-valid";
 
-	const isFormValid = !registerEmailValid || !passwordValid || registerEmailErrorMessage;
+	const isFormValid = !loginEmailValid || !passwordValid || loginEmailErrorMessage;
 
 	const submitHandler = (event) => {
 		event.preventDefault();
 		Axios.post(
-			"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDR1LWLSPu9_tgEFRM1-Hy6076C6vvt6QQ",
+			"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDR1LWLSPu9_tgEFRM1-Hy6076C6vvt6QQ",
 			{
-				email: registerEmailValue,
+				email: loginEmailValue,
 				password: passwordValue,
 				returnSecureToken: true,
 			}
 		)
 			.then((response) => {
-				console.log(response.data);
+				authenticationHandler(response.data.idToken);
+				navigate("/");
 			})
 			.catch((err) => {
-				console.log(err.response.data.error.message);
-				setRegisterEmailErrorMessage(err.response.data.error.message);
+				console.log(err.response.data);
+				if (err.response.data.error.message.includes("PASSWORD")) {
+					setPasswordErrorMessage(err.response.data.error.message);
+				} else {
+					setLoginEmailErrorMessage(err.response.data.error.message);
+				}
 			});
 	};
 	return (
@@ -83,13 +91,13 @@ export const Login = () => {
 				<label className="label-form">Email</label>
 				<input
 					type="text"
-					className={registerEmailClass}
+					className={loginEmailClass}
 					placeholder="Email"
-					value={registerEmailValue}
-					onChange={registerEmailHandler}
-					onBlur={registerEmailBlurHandler}
+					value={loginEmailValue}
+					onChange={loginEmailHandler}
+					onBlur={loginEmailBlurHandler}
 				/>
-				<div className="error-message"> {registerEmailErrorMessage}</div>
+				<div className="error-message"> {loginEmailErrorMessage}</div>
 
 				<label className="label-form">Password</label>
 				<input

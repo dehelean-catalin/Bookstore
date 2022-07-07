@@ -1,12 +1,10 @@
-import React, { Children, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./OrdersForm.css";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import { useInput } from "../hooks/use-input";
 import { OrdersContext } from "../store/orders-context";
-import { OrderDetails } from "../pages/OrderDetails";
-import { OrdersItem } from "./OrdersItem";
 
 const DEFAULT_INITIAL_VALUES = {
 	firstName: "",
@@ -18,20 +16,29 @@ const DEFAULT_INITIAL_VALUES = {
 	deliveryAddress: "",
 	deliveryPhone: "",
 	deliveryDate: "",
+	isAddressDeliveryBtnActive: false,
 	payMethod: "",
 	observation: "",
-	recomandation: "",
+	isRecomandationBtnChecked: false,
 };
 export const OrdersForm = () => {
+	let navigate = useNavigate();
 	const { order } = useContext(OrdersContext);
 	const [orderInformation, setOrderInformation] = useState({});
 	const { id: orderId } = useParams();
 	const [initialValues, setIntialValues] = useState(DEFAULT_INITIAL_VALUES);
-	const [updateForm, setUpdateForm] = useState(false);
+	const [isUpdateModeOn, setisUpdateModeOn] = useState(false);
+	const [isAddressDeliveryBtnActive, setIsAddressDeliveryBtnActive] = useState(
+		DEFAULT_INITIAL_VALUES.isAddressDeliveryBtnActive
+	);
+	const [isRecomandationBtnChecked, setIsRecomandationBtnChecked] = useState(
+		DEFAULT_INITIAL_VALUES.isRecomandationBtnChecked
+	);
+	const [payMethodOption, setPayMethodOption] = useState(DEFAULT_INITIAL_VALUES.payMethod);
+
 	const [idNotFoundError, setIdNotFoundError] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [httpError, setHttpError] = useState(null);
-
 	useEffect(() => {
 		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json")
 			.then((response) => {
@@ -51,39 +58,27 @@ export const OrdersForm = () => {
 					setIdNotFoundError(true);
 				}
 				if (loadedShoppingCart.find((order) => order.id === +orderId)) {
-					setUpdateForm(true);
+					setisUpdateModeOn(true);
+
 					const { costumerDetails } = loadedShoppingCart.find((order) => order.id === +orderId);
-					console.log(costumerDetails);
-					const {
-						firstName,
-						lastName,
-						billingCountry,
-						billingAddress,
-						billingPhone,
-						deliveryCountry,
-						deliveryAddress,
-						deliveryPhone,
-						deliveryDate,
-						payMethod,
-						observation,
-						recomandation,
-						isAddressDeliveryBtnActive,
-					} = costumerDetails;
 					setIntialValues({
-						firstName: firstName,
-						lastName: lastName,
-						billingCountry: billingCountry,
-						billingAddress: billingAddress,
-						billingPhone: billingPhone,
-						deliveryCountry: deliveryCountry,
-						deliveryAddress: deliveryAddress,
-						deliveryPhone: deliveryPhone,
-						deliveryDate: deliveryDate,
-						payMethod: payMethod,
-						observation: observation,
-						recomandation: recomandation,
-						isDeliveryBtnActive: isAddressDeliveryBtnActive,
+						firstName: costumerDetails.firstName,
+						lastName: costumerDetails.lastName,
+						billingCountry: costumerDetails.billingCountry,
+						billingAddress: costumerDetails.billingAddress,
+						billingPhone: costumerDetails.billingPhone,
+						deliveryCountry: costumerDetails.deliveryCountry,
+						deliveryAddress: costumerDetails.deliveryAddress,
+						deliveryPhone: costumerDetails.deliveryPhone,
+						deliveryDate: costumerDetails.deliveryDate,
+						payMethod: costumerDetails.payMethod,
+						observation: costumerDetails.observation,
+						isAddressDeliveryBtnActive: costumerDetails.isAddressDeliveryBtnActive,
+						isRecomandationBtnChecked: costumerDetails.isRecomandationBtnChecked,
 					});
+					setIsAddressDeliveryBtnActive(costumerDetails.isAddressDeliveryBtnActive);
+					setIsRecomandationBtnChecked(costumerDetails.isRecomandationBtnChecked);
+					setPayMethodOption(costumerDetails.payMethod);
 				}
 			})
 			.catch((err) => {
@@ -93,8 +88,6 @@ export const OrdersForm = () => {
 				setIsLoading(false);
 			});
 	}, []);
-	console.log(orderInformation);
-	let navigate = useNavigate();
 
 	const {
 		value: firstNameValue,
@@ -130,7 +123,7 @@ export const OrdersForm = () => {
 		hasError: billingPhoneError,
 		valueChangeHandler: billingPhoneChangehandler,
 		inputBlurHandler: billingPhoneBlurHandler,
-	} = useInput((value) => value.trim() !== "", initialValues.billingPhone);
+	} = useInput((value) => value.trim() !== "" && value.length === 10, initialValues.billingPhone);
 	const {
 		value: deliveryCountryValue,
 		isValid: deliveryCountryValid,
@@ -151,7 +144,7 @@ export const OrdersForm = () => {
 		hasError: deliveryPhoneError,
 		valueChangeHandler: deliveryPhoneChangehandler,
 		inputBlurHandler: deliveryPhoneBlurHandler,
-	} = useInput((value) => value.trim() !== "", initialValues.deliveryPhone);
+	} = useInput((value) => value.trim() !== "" && value.length === 10, initialValues.deliveryPhone);
 	const {
 		value: deliveryDateValue,
 		isValid: deliveryDateValid,
@@ -159,25 +152,16 @@ export const OrdersForm = () => {
 		valueChangeHandler: deliveryDateChangehandler,
 		inputBlurHandler: deliveryDateBlurHandler,
 	} = useInput((value) => value.trim() !== "", initialValues.deliveryDate);
-
-	const { value: payMethodValue, isValid: payMethodValid, valueChangeHandler: payMethodChangehandler } = useInput(
-		(value) => value.trim() !== "",
-		initialValues.payMethod
-	);
 	const { value: observationsValue, valueChangeHandler: observationsChangehandler } = useInput(
 		(value) => value.trim() !== "",
 		initialValues.observation
 	);
-
-	const [recomandation, setRecomandation] = useState(false);
-	const [isAddressDeliveryBtnActive, setIsAddressDeliveryBtnActive] = useState(false);
 
 	const inputFirstName = !firstNameError ? "cd-input-valid" : "cd-input-invalid";
 	const inputLastName = !lastNameError ? "cd-input-valid" : "cd-input-invalid";
 	const inputBillingCountry = !billingCountryError ? "form-select-valid" : "form-select-invalid";
 	const inputBillingAddress = !billingAddressError ? "address-input-valid" : "address-input-invalid";
 	const inputBillingPhone = !billingPhoneError ? "address-input-valid" : "address-input-invalid";
-
 	const inputDeliveryCountry =
 		!deliveryCountryError || isAddressDeliveryBtnActive ? "form-select-valid" : "form-select-invalid";
 	const inputDeliveryAddress =
@@ -194,12 +178,20 @@ export const OrdersForm = () => {
 		!billingPhoneValid ||
 		(!isAddressDeliveryBtnActive && (!deliveryCountryValid || !deliveryAddressValid || !deliveryPhoneValid)) ||
 		!deliveryDateValid ||
-		!payMethodValid;
+		!payMethodOption;
 
 	const deliveryAddresHandler = () => {
 		setIsAddressDeliveryBtnActive(!isAddressDeliveryBtnActive);
 	};
-	const placeOrderHandler = (e) => {
+	const recomandationHandler = () => {
+		setIsRecomandationBtnChecked(!isRecomandationBtnChecked);
+	};
+
+	const payMethodHandler = (event) => {
+		setPayMethodOption(event.target.value);
+	};
+
+	const submitHandler = (e) => {
 		e.preventDefault();
 		const costumerDetails = {
 			firstName: firstNameValue,
@@ -213,66 +205,47 @@ export const OrdersForm = () => {
 			deliveryPhone: isAddressDeliveryBtnActive ? billingPhoneValue : deliveryPhoneValue,
 			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
 			deliveryDate: deliveryDateValue,
-			payMethod: payMethodValue,
+			payMethod: payMethodOption,
 			observation: observationsValue,
-			recomandation: recomandation,
+			isRecomandationBtnChecked: isRecomandationBtnChecked,
 		};
-		Axios.post("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json", {
-			...order,
-			costumerDetails,
-		})
-			.then(() => {
-				navigate("/orders");
-				Axios.delete(
-					"https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json"
-				).catch((err) => {
+		if (isUpdateModeOn) {
+			const { id, items, price, deliveryStatus } = orderInformation;
+
+			Axios.put(
+				`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders/${orderInformation.key}.json`,
+				{
+					id: id,
+					items: items,
+					price: price,
+					deliveryStatus: deliveryStatus,
+					costumerDetails,
+				}
+			)
+				.then(() => {
+					navigate("/orders");
+				})
+				.catch((err) => {
 					console.log(err.response.data);
 				});
-			})
-			.catch((err) => {
-				console.log(err.response.data);
-			});
-	};
-	const updateOrderHandler = (e) => {
-		e.preventDefault();
-		console.log("update");
-		const costumerDetails = {
-			firstName: firstNameValue,
-			lastName: lastNameValue,
-			billingCountry: billingCountryValue,
-			billingAddress: billingAddressValue,
-			billingPhone: billingPhoneValue,
-			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
-			deliveryCountry: isAddressDeliveryBtnActive ? billingCountryValue : deliveryCountryValue,
-			deliveryAddress: isAddressDeliveryBtnActive ? billingAddressValue : deliveryAddressValue,
-			deliveryPhone: isAddressDeliveryBtnActive ? billingPhoneValue : deliveryPhoneValue,
-			isAddressDeliveryBtnActive: isAddressDeliveryBtnActive,
-			deliveryDate: deliveryDateValue,
-			payMethod: payMethodValue,
-			observation: observationsValue,
-			recomandation: recomandation,
-		};
-		const { id, items, price, deliveryStatus } = orderInformation;
-		console.log(id);
-		Axios.put(
-			`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders/${orderInformation.key}.json`,
-			{
-				id: id,
-				items: items,
-				price: price,
-				deliveryStatus: deliveryStatus,
+		} else {
+			Axios.post("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json", {
+				...order,
 				costumerDetails,
-			}
-		)
-			.then(() => {
-				navigate("/orders");
 			})
-			.catch((err) => {
-				console.log(err.response.data);
-			});
+				.then(() => {
+					navigate("/orders");
+					Axios.delete(
+						"https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json"
+					).catch((err) => {
+						console.log(err.response.data);
+					});
+				})
+				.catch((err) => {
+					console.log(err.response.data);
+				});
+		}
 	};
-	const submitHandler = updateForm ? updateOrderHandler : placeOrderHandler;
-
 	if (idNotFoundError) {
 		return (
 			<div className="form-error">
@@ -294,6 +267,7 @@ export const OrdersForm = () => {
 			</div>
 		);
 	}
+
 	return (
 		<form className="form" onSubmit={submitHandler}>
 			<div className="form-title">Order Details</div>
@@ -351,9 +325,9 @@ export const OrdersForm = () => {
 				<input
 					className="checkbox"
 					type="checkbox"
-					onClick={deliveryAddresHandler}
+					onChange={deliveryAddresHandler}
 					disabled={!billingAddressValue || !billingCountryValue || !billingPhoneValue}
-					checked={initialValues.isDeliveryBtnActive || isAddressDeliveryBtnActive}
+					checked={isAddressDeliveryBtnActive}
 				/>
 				<label>Use address for delivery </label>
 			</div>
@@ -391,11 +365,25 @@ export const OrdersForm = () => {
 				/>
 			</div>
 			<label className="billing-address">Payment Type</label>
-			<div className="radio-btn-container" onChange={payMethodChangehandler}>
-				<input type="radio" id="online" name="pay-method" value="Online" />
+			<div className="radio-btn-container">
+				<input
+					type="radio"
+					id="online"
+					name="pay-method"
+					value="Online"
+					checked={payMethodOption === "Online" ? true : false}
+					onChange={payMethodHandler}
+				/>
 				<label>Online</label>
 
-				<input type="radio" id="cash" name="pay-method" value="Cash" />
+				<input
+					type="radio"
+					id="cash"
+					name="pay-method"
+					value="Cash"
+					checked={payMethodOption === "Cash" ? true : false}
+					onChange={payMethodHandler}
+				/>
 				<label>Cash</label>
 			</div>
 			<label className="billing-address">Delivery Date</label>
@@ -414,27 +402,19 @@ export const OrdersForm = () => {
 				<input
 					className="checkbox"
 					type="checkbox"
-					value={recomandation}
-					onClick={() => {
-						setRecomandation(true);
-					}}
+					onChange={recomandationHandler}
+					checked={isRecomandationBtnChecked}
 				/>
 				<label>Would You Recommend Us?</label>
 			</div>
 			<div className="order-btns">
-				<Link to="/cart" className="cancel-btn">
+				<Link to={isUpdateModeOn ? "/orders" : "/cart"} className="cancel-btn">
 					Cancel Order
 				</Link>
-				{!updateForm && (
-					<button type="submit" className="plc-order-btn" disabled={isFormValid}>
-						Place Order
-					</button>
-				)}
-				{updateForm && (
-					<button type="submit" className="plc-order-btn" disabled={isFormValid}>
-						Update Order
-					</button>
-				)}
+
+				<button type="submit" className="plc-order-btn" disabled={isFormValid}>
+					{isUpdateModeOn ? "Update Order" : "Place Order"}
+				</button>
 			</div>
 		</form>
 	);

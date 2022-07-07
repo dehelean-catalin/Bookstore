@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { BiHomeAlt } from "react-icons/bi";
 import { IoCartOutline } from "react-icons/io5";
 import { TbTruckDelivery } from "react-icons/tb";
 import { FaRegUser } from "react-icons/fa";
+import { AuthContext } from "../store/auth-context";
 
 export const Header = () => {
 	const location = useLocation();
+	const { authenticationToken } = useContext(AuthContext);
 
 	const isHomeActive = location.pathname === "/" ? "active-tab" : "inactive-tab";
 	const isShoppingCartActive = location.pathname === "/cart" ? "active-tab" : "inactive-tab";
@@ -26,13 +28,13 @@ export const Header = () => {
 						</Link>
 					</li>
 					<li className={isShoppingCartActive}>
-						<Link to="/cart" className="header-link">
+						<Link to={authenticationToken ? "/cart" : "/login"} className="header-link">
 							<IoCartOutline className="cart-icon" />
 							<h2> SHOPPING CART</h2>
 						</Link>
 					</li>
 					<li className={isOrdersActive}>
-						<Link to="/orders" className="header-link">
+						<Link to={authenticationToken ? "/orders" : "/login"} className="header-link">
 							<TbTruckDelivery className="orders-icon" />
 							<h2>ORDERS</h2>
 						</Link>

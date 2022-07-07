@@ -3,34 +3,36 @@ import { Carousel } from "../components/Carousel";
 import { SliderData } from "../components/SliderData";
 import { BookList } from "../components/BookList";
 import "./HomePage.css";
+import { useHttp } from "../hooks/use-http";
 import Axios from "axios";
 export const HomePage = () => {
 	const [books, setBooks] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState(null);
-	useEffect(() => {
-		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/books.json")
-			.then((response) => {
-				let loadedBooks = [];
-				for (const key in response.data) {
-					loadedBooks.push({
-						id: key,
-						title: response.data[key].title,
-						price: response.data[key].price,
-						icon: response.data[key].icon,
-						author: response.data[key].author,
-						description: response.data[key].description,
-					});
-				}
-				setBooks(loadedBooks);
-			})
-			.catch((err) => {
-				setHttpError(err.response.data);
-			})
-			.finally(() => {
-				setIsLoading(false);
+
+	const transfromData = (books) => {
+		let loadedData = [];
+		for (const key in books) {
+			loadedData.push({
+				id: key,
+				title: books[key].title,
+				price: books[key].price,
+				icon: books[key].icon,
+				author: books[key].author,
+				description: books[key].description,
 			});
+		}
+		setBooks(loadedData);
+	};
+	const { sendRequest, httpError, isLoading } = useHttp(
+		{
+			url: "https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/books.json",
+			httpMethod: Axios.get,
+		},
+		transfromData
+	);
+	useEffect(() => {
+		sendRequest();
 	}, []);
+
 	if (httpError) {
 		return (
 			<div className="home-page">
