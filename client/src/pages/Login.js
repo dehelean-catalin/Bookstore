@@ -1,5 +1,5 @@
 import Axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/use-input";
 import flyingBook from "../images/flyingBook.jpg";
@@ -8,55 +8,27 @@ import "./Login.css";
 export const Login = () => {
 	let navigate = useNavigate();
 	const { authenticationHandler } = useContext(AuthContext);
-	const [loginEmailErrorMessage, setLoginEmailErrorMessage] = useState("");
-	const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+	const [credentialsError, setCredetialsError] = useState("");
+
 	const {
 		value: loginEmailValue,
 		hasError: loginEmailError,
 		isValid: loginEmailValid,
 		valueChangeHandler: loginEmailHandler,
 		inputBlurHandler: loginEmailBlurHandler,
-	} = useInput((value) => value.trim() !== "" && value.includes("@") === true, "");
+	} = useInput((value) => value.trim() !== "", "");
 	const {
 		value: passwordValue,
 		hasError: passwordError,
 		isValid: passwordValid,
 		valueChangeHandler: passwordHandler,
 		inputBlurHandler: passwordBlurHandler,
-	} = useInput((value) => value.trim() !== "" && value.length >= 6, "");
+	} = useInput((value) => value.trim() !== "", "");
 
-	const validateEmail = () => {
-		if (loginEmailError && loginEmailValue.trim() === "") {
-			setLoginEmailErrorMessage("Empty");
-		} else if (loginEmailError && loginEmailValue.includes("@") === false) {
-			setLoginEmailErrorMessage("Not an email format");
-		} else {
-			setLoginEmailErrorMessage("");
-		}
-	};
+	const loginEmailClass = loginEmailError ? "login-input-invalid" : "login-input-valid";
+	const passwordClass = passwordError ? "login-input-invalid" : "login-input-valid";
 
-	useEffect(() => {
-		validateEmail();
-	}, [loginEmailValue, loginEmailError]);
-
-	const validatePassword = () => {
-		if (passwordError && passwordValue.trim() === "") {
-			setPasswordErrorMessage("Empty");
-		} else if (passwordError && passwordValue.length < 6) {
-			setPasswordErrorMessage("Not strong enough");
-		} else {
-			setPasswordErrorMessage("");
-		}
-	};
-
-	useEffect(() => {
-		validatePassword();
-	}, [passwordValue, passwordError]);
-
-	const loginEmailClass = loginEmailErrorMessage ? "login-input-invalid" : "login-input-valid";
-	const passwordClass = passwordErrorMessage ? "login-input-invalid" : "login-input-valid";
-
-	const isFormValid = !loginEmailValid || !passwordValid || loginEmailErrorMessage;
+	const isFormValid = !loginEmailValid || !passwordValid;
 
 	const submitHandler = (event) => {
 		event.preventDefault();
@@ -69,16 +41,13 @@ export const Login = () => {
 			}
 		)
 			.then((response) => {
-				authenticationHandler(response.data.idToken);
+				console.log(response.data);
+				localStorage.setItem("token", response.data.idToken);
+				authenticationHandler(localStorage.getItem("token"));
 				navigate("/");
 			})
-			.catch((err) => {
-				console.log(err.response.data);
-				if (err.response.data.error.message.includes("PASSWORD")) {
-					setPasswordErrorMessage(err.response.data.error.message);
-				} else {
-					setLoginEmailErrorMessage(err.response.data.error.message);
-				}
+			.catch(() => {
+				setCredetialsError("Login Failed: Invalid username or password");
 			});
 	};
 	return (
@@ -97,7 +66,6 @@ export const Login = () => {
 					onChange={loginEmailHandler}
 					onBlur={loginEmailBlurHandler}
 				/>
-				<div className="error-message"> {loginEmailErrorMessage}</div>
 
 				<label className="label-form">Password</label>
 				<input
@@ -108,11 +76,11 @@ export const Login = () => {
 					onChange={passwordHandler}
 					onBlur={passwordBlurHandler}
 				/>
-				<div className="error-message"> {passwordErrorMessage}</div>
 				<div className="input-checkbox-container">
 					<input type="checkbox" />
 					<div>Remember me?</div>
 				</div>
+				<div className="error-message"> {credentialsError}</div>
 				<button type="submit" className="login-btn" disabled={isFormValid}>
 					Login
 				</button>

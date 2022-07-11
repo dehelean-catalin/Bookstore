@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import { useInput } from "../hooks/use-input";
 import { OrdersContext } from "../store/orders-context";
+import { ShoppingCartContext } from "../store/shopping-cart-context";
 
 const DEFAULT_INITIAL_VALUES = {
 	firstName: "",
@@ -23,6 +24,7 @@ const DEFAULT_INITIAL_VALUES = {
 };
 export const OrdersForm = () => {
 	let navigate = useNavigate();
+	const { setCounter } = useContext(ShoppingCartContext);
 	const { order } = useContext(OrdersContext);
 	const [orderInformation, setOrderInformation] = useState({});
 	const { id: orderId } = useParams();
@@ -234,6 +236,7 @@ export const OrdersForm = () => {
 				costumerDetails,
 			})
 				.then(() => {
+					setCounter(0);
 					navigate("/orders");
 					Axios.delete(
 						"https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json"

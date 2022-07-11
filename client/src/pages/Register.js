@@ -1,11 +1,13 @@
 import Axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/use-input";
 import flyingBook from "../images/flyingBook.jpg";
+import { AuthContext } from "../store/auth-context";
 import "./Register.css";
 export const Register = () => {
 	let navigate = useNavigate();
+	const { authenticationHandler } = useContext(AuthContext);
 	const [registerEmailErrorMessage, setRegisterEmailErrorMessage] = useState("");
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
@@ -88,11 +90,9 @@ export const Register = () => {
 			}
 		)
 			.then((response) => {
-				console.log(response);
-				if (response.status === 200) {
-					console.log("lala");
-					navigate("/");
-				}
+				localStorage.setItem("token", response.data.idToken);
+				authenticationHandler(localStorage.getItem("token"));
+				navigate("/");
 			})
 			.catch((err) => {
 				console.log(err.response.data.error.message);
