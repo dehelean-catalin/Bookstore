@@ -3,11 +3,11 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/use-input";
 import flyingBook from "../images/flyingBook.jpg";
-import { AuthContext } from "../store/auth-context";
+import AuthContext from "../store/auth-context";
 import "./Login.css";
 export const Login = () => {
-	let navigate = useNavigate();
-	const { authenticationHandler } = useContext(AuthContext);
+	const navigate = useNavigate();
+	const { login, userIdHandler } = useContext(AuthContext);
 	const [credentialsError, setCredetialsError] = useState("");
 
 	const {
@@ -41,15 +41,15 @@ export const Login = () => {
 			}
 		)
 			.then((response) => {
-				console.log(response.data);
-				localStorage.setItem("token", response.data.idToken);
-				authenticationHandler(localStorage.getItem("token"));
-				navigate("/");
+				login(response.data.idToken);
+				userIdHandler(response.data.localId);
+				navigate("/", { replace: true });
 			})
 			.catch(() => {
 				setCredetialsError("Login Failed: Invalid username or password");
 			});
 	};
+
 	return (
 		<div className="login">
 			<img src={flyingBook} className="login-image" alt="not found" />
@@ -66,7 +66,7 @@ export const Login = () => {
 					onChange={loginEmailHandler}
 					onBlur={loginEmailBlurHandler}
 				/>
-
+				<div className="error-message">{loginEmailError ? "Email field is required" : ""}</div>
 				<label className="label-form">Password</label>
 				<input
 					type="password"
@@ -76,6 +76,7 @@ export const Login = () => {
 					onChange={passwordHandler}
 					onBlur={passwordBlurHandler}
 				/>
+				<div className="error-message"> {passwordError ? "Password field is required" : ""}</div>
 				<div className="input-checkbox-container">
 					<input type="checkbox" />
 					<div>Remember me?</div>

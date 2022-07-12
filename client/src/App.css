@@ -5,3 +5,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 }
+.page-not-found-error {
+	text-align: center;
+	font-size: 30px;
+}

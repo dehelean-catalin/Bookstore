@@ -5,16 +5,19 @@ import "./ShoppingCart.css";
 import { HiOutlineEmojiSad } from "react-icons/hi";
 import { OrdersContext } from "../store/orders-context";
 import Axios from "axios";
-import { ShoppingCartContext } from "../store/shopping-cart-context";
 import { useHttp } from "../hooks/use-http";
+import AuthContext from "../store/auth-context";
+import ShoppingCartContext from "../store/shopping-cart-context";
 export const ShoppingCart = () => {
 	const { orderHandler } = useContext(OrdersContext);
-	const { handleShoppingCart, products } = useContext(ShoppingCartContext);
+	const { shoppingCart, shoppingCartHandler } = useContext(ShoppingCartContext);
+	const { userId } = useContext(AuthContext);
 	const shoppingCardData = (items) => {
 		let loadedData = [];
 		for (const key in items) {
 			loadedData.push({
 				id: key,
+				userId: items[key].userId,
 				title: items[key].title,
 				price: items[key].price,
 				icon: items[key].icon,
@@ -22,7 +25,8 @@ export const ShoppingCart = () => {
 				description: items[key].description,
 			});
 		}
-		handleShoppingCart(loadedData);
+		console.log(userId);
+		shoppingCartHandler(loadedData.filter((item) => item.userId === userId));
 	};
 	const { sendRequest, httpError, isLoading } = useHttp(
 		{
@@ -35,15 +39,16 @@ export const ShoppingCart = () => {
 		sendRequest();
 	}, []);
 
-	const priceValues = products.map((item) => item.price);
+	const priceValues = shoppingCart.map((item) => item.price);
 	const totalPrice = priceValues.reduce((a, b) => a + b, 0).toFixed(2);
 	const orderId = Math.floor(Math.random() * 90000) + 10000;
-	const shoppingCartIsEmpty = products.length === 0;
+	const shoppingCartIsEmpty = shoppingCart.length === 0;
 
 	const handlePlaceOrder = () => {
 		orderHandler({
+			userId: userId,
 			id: orderId,
-			items: products.length,
+			items: shoppingCart.length,
 			deliveryStatus: "In progress",
 			price: totalPrice,
 		});
@@ -67,7 +72,7 @@ export const ShoppingCart = () => {
 			<div className="shopping-cart-container">
 				<div className="shopping-cart-title">Your Products</div>
 
-				{!shoppingCartIsEmpty && <ShoppingCartList bookList={products} />}
+				{!shoppingCartIsEmpty && <ShoppingCartList bookList={shoppingCart} />}
 				{shoppingCartIsEmpty && (
 					<div className="shopping-cart-empty">
 						<HiOutlineEmojiSad className="empty-icon" /> Shopping cart is empty

@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { OrdersList } from "../components/OrdersList";
 import { HiOutlineEmojiSad } from "react-icons/hi";
 import Axios from "axios";
 import "./Orders.css";
+import AuthContext from "../store/auth-context";
+import { useHttp } from "../hooks/use-http";
 export const Orders = () => {
 	const [ordersList, setOrdersList] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState(null);
-	useEffect(() => {
-		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json")
-			.then((response) => {
-				let loadedOrders = [];
-				for (const key in response.data) {
-					loadedOrders.push({
-						id: response.data[key].id,
-						items: response.data[key].items,
-						price: response.data[key].price,
-						deliveryStatus: response.data[key].deliveryStatus,
-					});
-				}
-				setOrdersList(loadedOrders);
-			})
-			.catch((err) => {
-				setHttpError(err.response.data);
-			})
-			.finally(() => {
-				setIsLoading(false);
+	const { userId } = useContext(AuthContext);
+
+	const ordersData = (order) => {
+		let loadedData = [];
+		for (const key in order) {
+			loadedData.push({
+				id: order[key].id,
+				items: order[key].items,
+				price: order[key].price,
+				deliveryStatus: order[key].deliveryStatus,
+				userId: order[key].userId,
 			});
+		}
+		setOrdersList(loadedData.filter((item) => item.userId === userId));
+	};
+	const { sendRequest, httpError, isLoading } = useHttp(
+		{
+			url: "https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders.json",
+			httpMethod: Axios.get,
+		},
+		ordersData
+	);
+	useEffect(() => {
+		sendRequest();
 	}, []);
+
 	if (httpError) {
 		return (
 			<div className="orders">

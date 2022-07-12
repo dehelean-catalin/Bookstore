@@ -1,25 +1,29 @@
 import React, { useContext } from "react";
-import "./AddToCartBtn.css";
+import { Link } from "react-router-dom";
+
+import ShoppingCartContext from "../store/shopping-cart-context";
+import AuthContext from "../store/auth-context";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import Axios from "axios";
-import { ShoppingCartContext } from "../store/shopping-cart-context";
+import "./AddToCartBtn.css";
 
 export const AddToCartBtn = ({ book }) => {
-	const { counter, setCounter } = useContext(ShoppingCartContext);
-	const addToCart = () => {
-		Axios.post("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json", book)
-			.then(() => {
-				setCounter(counter + 1);
-			})
-			.catch((err) => {
-				console.log(err.response.data);
-			});
-	};
+	const { addToCart } = useContext(ShoppingCartContext);
+	const { isLogin, userId } = useContext(AuthContext);
 
 	return (
-		<button className="card-button" onClick={addToCart}>
-			<AiOutlineShoppingCart />
-			<h3>Add to cart</h3>
-		</button>
+		<div>
+			{isLogin && (
+				<button className="card-button" onClick={() => addToCart(book, userId)}>
+					<AiOutlineShoppingCart />
+					<h3>Add to cart</h3>
+				</button>
+			)}
+			{!isLogin && (
+				<Link to="/login" className="card-button">
+					<AiOutlineShoppingCart />
+					<h3>Add to cart</h3>
+				</Link>
+			)}
+		</div>
 	);
 };

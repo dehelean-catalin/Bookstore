@@ -2,11 +2,13 @@ import React, { useContext } from "react";
 import "./ShoppingCartItem.css";
 import { IoTrashOutline } from "react-icons/io5";
 
-import { ShoppingCartContext } from "../store/shopping-cart-context";
+import ShoppingCartContext from "../store/shopping-cart-context";
+import AuthContext from "../store/auth-context";
 export const ShoppingCartItem = ({ book }) => {
 	const { id, icon, title, author, price } = book;
 	const { deleteItemFromShoppingCart } = useContext(ShoppingCartContext);
-
+	const { userId } = useContext(AuthContext);
+	console.log(userId);
 	return (
 		<div className="shopping-cart-item">
 			<div className="shopping-cart-item-container">
@@ -21,7 +23,7 @@ export const ShoppingCartItem = ({ book }) => {
 			</div>
 			<div className="shopping-cart-item-price">
 				<div className="book-price">${price}</div>
-				<button className="remove-btn" onClick={() => deleteItemFromShoppingCart(id)}>
+				<button className="remove-btn" onClick={() => deleteItemFromShoppingCart(id, userId)}>
 					<IoTrashOutline className="trash-icon" />
 					Remove
 				</button>

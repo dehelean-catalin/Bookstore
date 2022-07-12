@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import { useInput } from "../hooks/use-input";
 import { OrdersContext } from "../store/orders-context";
-import { ShoppingCartContext } from "../store/shopping-cart-context";
+import AuthContext from "../store/auth-context";
+import ShoppingCartContext from "../store/shopping-cart-context";
 
 const DEFAULT_INITIAL_VALUES = {
 	firstName: "",
@@ -24,8 +25,9 @@ const DEFAULT_INITIAL_VALUES = {
 };
 export const OrdersForm = () => {
 	let navigate = useNavigate();
-	const { setCounter } = useContext(ShoppingCartContext);
+	const { setCounter, products } = useContext(ShoppingCartContext);
 	const { order } = useContext(OrdersContext);
+	const { userId } = useContext(AuthContext);
 	const [orderInformation, setOrderInformation] = useState({});
 	const { id: orderId } = useParams();
 	const [initialValues, setIntialValues] = useState(DEFAULT_INITIAL_VALUES);
@@ -237,18 +239,25 @@ export const OrdersForm = () => {
 			})
 				.then(() => {
 					setCounter(0);
+
+					for (const key in products) {
+						console.log(products[key].id);
+						if (products[key].userId == userId) {
+							Axios.delete(
+								`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${products[key].id}.json`
+							).catch((err) => {
+								console.log(err.response.data);
+							});
+						}
+					}
 					navigate("/orders");
-					Axios.delete(
-						"https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json"
-					).catch((err) => {
-						console.log(err.response.data);
-					});
 				})
 				.catch((err) => {
 					console.log(err.response.data);
 				});
 		}
 	};
+
 	if (idNotFoundError) {
 		return (
 			<div className="form-error">
@@ -329,7 +338,7 @@ export const OrdersForm = () => {
 					className="checkbox"
 					type="checkbox"
 					onChange={deliveryAddresHandler}
-					disabled={!billingAddressValue || !billingCountryValue || !billingPhoneValue}
+					disabled={!billingAddressValue || !billingCountryValue || !billingPhoneValue || !billingPhoneValid}
 					checked={isAddressDeliveryBtnActive}
 				/>
 				<label>Use address for delivery </label>

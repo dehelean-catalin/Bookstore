@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/use-input";
 import flyingBook from "../images/flyingBook.jpg";
-import { AuthContext } from "../store/auth-context";
+import AuthContext from "../store/auth-context";
 import "./Register.css";
 export const Register = () => {
 	let navigate = useNavigate();
-	const { authenticationHandler } = useContext(AuthContext);
+	const { login, userIdHandler } = useContext(AuthContext);
 	const [registerEmailErrorMessage, setRegisterEmailErrorMessage] = useState("");
 	const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
@@ -90,9 +90,11 @@ export const Register = () => {
 			}
 		)
 			.then((response) => {
+				login(response.data.idToken);
+				userIdHandler(response.data.localId);
 				localStorage.setItem("token", response.data.idToken);
-				authenticationHandler(localStorage.getItem("token"));
-				navigate("/");
+				localStorage.setItem("userId", response.data.localId);
+				navigate("/", { replace: true });
 			})
 			.catch((err) => {
 				console.log(err.response.data.error.message);

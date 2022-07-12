@@ -83,6 +83,7 @@ h2 {
 	border-radius: 4px;
 	border: 0px;
 	position: absolute;
+	z-index: 3;
 	top: 72px;
 	transition: all 0.4s;
 }
@@ -106,4 +107,14 @@ h2 {
 	position: absolute;
 	top: 15px;
 	left: 10px;
+}
+.backdrop {
+	background-color: black;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 2;
+	opacity: 0.5;
 }
