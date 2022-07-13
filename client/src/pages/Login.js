@@ -41,7 +41,8 @@ export const Login = () => {
 			}
 		)
 			.then((response) => {
-				login(response.data.idToken);
+				const expirationTime = new Date(new Date().getTime() + +response.data.expiresIn * 1000);
+				login(response.data.idToken, expirationTime.toISOString());
 				userIdHandler(response.data.localId);
 				navigate("/", { replace: true });
 			})

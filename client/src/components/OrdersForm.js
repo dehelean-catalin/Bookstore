@@ -4,7 +4,7 @@ import "./OrdersForm.css";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import { useInput } from "../hooks/use-input";
-import { OrdersContext } from "../store/orders-context";
+import OrdersContext from "../store/orders-context";
 import AuthContext from "../store/auth-context";
 import ShoppingCartContext from "../store/shopping-cart-context";
 
@@ -25,7 +25,7 @@ const DEFAULT_INITIAL_VALUES = {
 };
 export const OrdersForm = () => {
 	let navigate = useNavigate();
-	const { setCounter, products } = useContext(ShoppingCartContext);
+	const { shoppingCart } = useContext(ShoppingCartContext);
 	const { order } = useContext(OrdersContext);
 	const { userId } = useContext(AuthContext);
 	const [orderInformation, setOrderInformation] = useState({});
@@ -219,6 +219,7 @@ export const OrdersForm = () => {
 			Axios.put(
 				`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders/${orderInformation.key}.json`,
 				{
+					userId: userId,
 					id: id,
 					items: items,
 					price: price,
@@ -238,13 +239,11 @@ export const OrdersForm = () => {
 				costumerDetails,
 			})
 				.then(() => {
-					setCounter(0);
-
-					for (const key in products) {
-						console.log(products[key].id);
-						if (products[key].userId == userId) {
+					for (const key in shoppingCart) {
+						console.log(shoppingCart[key].id);
+						if (shoppingCart[key].userId == userId) {
 							Axios.delete(
-								`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${products[key].id}.json`
+								`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${shoppingCart[key].id}.json`
 							).catch((err) => {
 								console.log(err.response.data);
 							});

@@ -3,7 +3,7 @@ import { ShoppingCartList } from "../components/ShoppingCartList";
 import { Link } from "react-router-dom";
 import "./ShoppingCart.css";
 import { HiOutlineEmojiSad } from "react-icons/hi";
-import { OrdersContext } from "../store/orders-context";
+import OrdersContext from "../store/orders-context";
 import Axios from "axios";
 import { useHttp } from "../hooks/use-http";
 import AuthContext from "../store/auth-context";

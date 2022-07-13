@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./Header.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BiHomeAlt } from "react-icons/bi";
 import { IoCartOutline } from "react-icons/io5";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -10,6 +10,7 @@ import { RiLogoutBoxRLine } from "react-icons/ri";
 import AuthContext from "../store/auth-context";
 import ShoppingCartContext from "../store/shopping-cart-context";
 export const Header = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const { counter } = useContext(ShoppingCartContext);
 	const { token, isLogin, logout } = useContext(AuthContext);
@@ -30,12 +31,13 @@ export const Header = () => {
 					setUserName(response.data.users[0].email);
 				})
 				.catch((err) => {
-					console.log(err.response.data);
+					logout();
 				});
 	}, [isLogin]);
 	const logOutHandler = () => {
 		logout();
 		setToggleLogOut(false);
+		navigate("/login", { replace: true });
 	};
 
 	return (

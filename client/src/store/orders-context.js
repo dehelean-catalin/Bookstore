@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const OrdersContext = React.createContext({
-	orderHandler: () => {},
+const OrdersContext = React.createContext({
 	order: "",
-	upadateOrder: () => {},
+	orderHandler: (order) => {},
 });
+export const OrdersContextProvider = (props) => {
+	const [order, setOrder] = useState();
+
+	const orderHandler = (order) => {
+		setOrder(order);
+	};
+
+	const contexValue = {
+		order: order,
+		orderHandler: orderHandler,
+	};
+	return <OrdersContext.Provider value={contexValue}>{props.children}</OrdersContext.Provider>;
+};
+export default OrdersContext;
