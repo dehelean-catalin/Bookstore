@@ -7,12 +7,13 @@ import { Login } from "./pages/Login";
 import { Orders } from "./pages/Orders";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
-import { BookDetails } from "./pages/BookDetails";
+
 import { OrderDetails } from "./pages/OrderDetails";
 import { Register } from "./pages/Register";
 import { ProtectedRoute, ProtectedLogin } from "./components/ProtectedRoute";
 import AuthContext from "./store/auth-context";
 import ShoppingCartContext from "./store/shopping-cart-context";
+import { BookDetails } from "./pages/BookDetails";
 
 function App() {
 	const { isLogin, userId } = useContext(AuthContext);

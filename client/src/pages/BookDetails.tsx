@@ -6,8 +6,8 @@ import { Details } from "../components/Details";
 export const BookDetails = () => {
 	const { id } = useParams();
 	const [bookDetails, setBookDetails] = useState();
-	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [httpError, setHttpError] = useState<string | undefined>();
 	useEffect(() => {
 		Axios.get(`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/books/${id}.json`)
 			.then((response) => {
