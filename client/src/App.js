@@ -22,7 +22,6 @@ function App() {
 	useEffect(() => {
 		initialCounterValue(userId);
 	}, [isLogin]);
-
 	return (
 		<div className="App">
 			<Header />

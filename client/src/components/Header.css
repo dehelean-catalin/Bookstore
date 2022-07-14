@@ -5,14 +5,13 @@ header {
 	justify-content: center;
 }
 nav {
-	width: 80%;
+	width: 77%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
 
 ul {
-	/* width: 514.27px; */
 	height: 72px;
 	margin: 0px;
 	display: flex;

@@ -4,12 +4,12 @@ import Axios from "axios";
 import { Details } from "../components/Details";
 
 export const BookDetails = () => {
-	const { id } = useParams();
-	const [bookDetails, setBookDetails] = useState();
+	const params = useParams();
+	const [bookDetails, setBookDetails] = useState<undefined>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [httpError, setHttpError] = useState<string | undefined>();
 	useEffect(() => {
-		Axios.get(`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/books/${id}.json`)
+		Axios.get(`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/books/${params.id}.json`)
 			.then((response) => {
 				setBookDetails(response.data);
 			})

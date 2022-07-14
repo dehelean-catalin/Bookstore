@@ -8,7 +8,7 @@ import "./Login.css";
 export const Login = () => {
 	const navigate = useNavigate();
 	const { login, userIdHandler } = useContext(AuthContext);
-	const [credentialsError, setCredetialsError] = useState("");
+	const [credentialsError, setCredetialsError] = useState<string>("");
 
 	const {
 		value: loginEmailValue,
@@ -16,21 +16,21 @@ export const Login = () => {
 		isValid: loginEmailValid,
 		valueChangeHandler: loginEmailHandler,
 		inputBlurHandler: loginEmailBlurHandler,
-	} = useInput((value) => value.trim() !== "", "");
+	} = useInput((value:string) => value.trim() !== "", "");
 	const {
 		value: passwordValue,
 		hasError: passwordError,
 		isValid: passwordValid,
 		valueChangeHandler: passwordHandler,
 		inputBlurHandler: passwordBlurHandler,
-	} = useInput((value) => value.trim() !== "", "");
+	} = useInput((value:string) => value.trim() !== "", "");
 
 	const loginEmailClass = loginEmailError ? "login-input-invalid" : "login-input-valid";
 	const passwordClass = passwordError ? "login-input-invalid" : "login-input-valid";
 
 	const isFormValid = !loginEmailValid || !passwordValid;
 
-	const submitHandler = (event) => {
+	const submitHandler = (event:React.FormEvent) => {
 		event.preventDefault();
 		Axios.post(
 			"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDR1LWLSPu9_tgEFRM1-Hy6076C6vvt6QQ",

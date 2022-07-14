@@ -8,12 +8,13 @@ import Axios from "axios";
 import { useHttp } from "../hooks/use-http";
 import AuthContext from "../store/auth-context";
 import ShoppingCartContext from "../store/shopping-cart-context";
+import { IShoppingCartBook } from "../models/models";
 export const ShoppingCart = () => {
 	const { orderHandler } = useContext(OrdersContext);
 	const { shoppingCart, shoppingCartHandler } = useContext(ShoppingCartContext);
 	const { userId } = useContext(AuthContext);
-	const shoppingCardData = (items) => {
-		let loadedData = [];
+	const shoppingCardData = (items:IShoppingCartBook[]) => {
+		let loadedData:IShoppingCartBook[] = [];
 		for (const key in items) {
 			loadedData.push({
 				id: key,
@@ -25,7 +26,6 @@ export const ShoppingCart = () => {
 				description: items[key].description,
 			});
 		}
-		console.log(userId);
 		shoppingCartHandler(loadedData.filter((item) => item.userId === userId));
 	};
 	const { sendRequest, httpError, isLoading } = useHttp(
@@ -39,10 +39,15 @@ export const ShoppingCart = () => {
 		sendRequest();
 	}, []);
 
-	const priceValues = shoppingCart.map((item) => item.price);
-	const totalPrice = priceValues.reduce((a, b) => a + b, 0).toFixed(2);
-	const orderId = Math.floor(Math.random() * 90000) + 10000;
-	const shoppingCartIsEmpty = shoppingCart.length === 0;
+	const priceValues:number[] = shoppingCart.map((item:IShoppingCartBook) => item.price);
+	const totalPrice:number = +priceValues.reduce((a, b) => a + b, 0).toFixed(2);
+	const orderId:number = Math.floor(Math.random() * 90000) + 10000;
+	let shoppingCartIsEmpty:boolean =false;
+
+	if(shoppingCart.length=== 0){
+       shoppingCartIsEmpty = true   
+	}
+	
 
 	const handlePlaceOrder = () => {
 		orderHandler({

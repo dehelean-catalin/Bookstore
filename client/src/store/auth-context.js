@@ -6,9 +6,9 @@ const AuthContext = React.createContext({
 	token: "",
 	userId: "",
 	isLogin: false,
-	login: (token) => {},
+	login: (token, expirationTime) => {},
 	logout: () => {},
-	userIdHandler: () => {},
+	userIdHandler: (id) => {},
 });
 const calculateRemainigTime = (expirationValue) => {
 	const currentTime = new Date().getTime();
@@ -68,7 +68,6 @@ export const AuthContextProvider = (props) => {
 
 	useEffect(() => {
 		if (tokenData) {
-			console.log(tokenData.duration);
 			logoutTimer = setTimeout(logoutHandler, tokenData.duration);
 		}
 	}, [tokenData]);

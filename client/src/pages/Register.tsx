@@ -17,21 +17,21 @@ export const Register = () => {
 		isValid: registerEmailValid,
 		valueChangeHandler: registerEmailHandler,
 		inputBlurHandler: registerEmailBlurHandler,
-	} = useInput((value) => value.trim() !== "" && value.includes("@") === true, "");
+	} = useInput((value:string) => value.trim() !== "" && value.includes("@") === true, "");
 	const {
 		value: passwordValue,
 		hasError: passwordError,
 		isValid: passwordValid,
 		valueChangeHandler: passwordHandler,
 		inputBlurHandler: passwordBlurHandler,
-	} = useInput((value) => value.trim() !== "" && value.length >= 6, "");
+	} = useInput((value:string) => value.trim() !== "" && value.length >= 6, "");
 	const {
 		value: confirmPasswordValue,
 		hasError: confirmPasswordError,
 		isValid: confirmPasswordValid,
 		valueChangeHandler: confirmPasswordHandler,
 		inputBlurHandler: confirmPasswordBlurHandler,
-	} = useInput((value) => value.trim() !== "" && value === passwordValue, "");
+	} = useInput((value:string) => value.trim() !== "" && value === passwordValue, "");
 
 	const validateEmail = () => {
 		if (registerEmailError && registerEmailValue.trim() === "") {
@@ -77,9 +77,9 @@ export const Register = () => {
 	const passwordClass = passwordErrorMessage ? "register-email-invalid" : "register-email-valid";
 	const confirmPasswordClass = confirmPasswordErrorMessage ? "register-email-invalid" : "register-email-valid";
 
-	const isFormValid = !registerEmailValid || !passwordValid || !confirmPasswordValid || registerEmailErrorMessage;
+	const isFormValid:boolean = !registerEmailValid || !passwordValid || !confirmPasswordValid || registerEmailError;
 
-	const submitHandler = (event) => {
+	const submitHandler = (event:React.FormEvent) => {
 		event.preventDefault();
 		Axios.post(
 			"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDR1LWLSPu9_tgEFRM1-Hy6076C6vvt6QQ",

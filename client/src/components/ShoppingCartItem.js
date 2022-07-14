@@ -8,7 +8,6 @@ export const ShoppingCartItem = ({ book }) => {
 	const { id, icon, title, author, price } = book;
 	const { deleteItemFromShoppingCart } = useContext(ShoppingCartContext);
 	const { userId } = useContext(AuthContext);
-	console.log(userId);
 	return (
 		<div className="shopping-cart-item">
 			<div className="shopping-cart-item-container">

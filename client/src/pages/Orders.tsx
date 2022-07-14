@@ -5,12 +5,12 @@ import Axios from "axios";
 import "./Orders.css";
 import AuthContext from "../store/auth-context";
 import { useHttp } from "../hooks/use-http";
+import { IOrder } from "../models/models";
 export const Orders = () => {
-	const [ordersList, setOrdersList] = useState([]);
+	const [ordersList, setOrdersList] = useState<IOrder[]>([]);
 	const { userId } = useContext(AuthContext);
-
-	const ordersData = (order) => {
-		let loadedData = [];
+	const ordersData = (order:IOrder[]) => {
+		let loadedData:IOrder[] = [];
 		for (const key in order) {
 			loadedData.push({
 				id: order[key].id,

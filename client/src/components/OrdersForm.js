@@ -25,7 +25,7 @@ const DEFAULT_INITIAL_VALUES = {
 };
 export const OrdersForm = () => {
 	let navigate = useNavigate();
-	const { shoppingCart } = useContext(ShoppingCartContext);
+	const { shoppingCart, counterHandler, initialCounterValue } = useContext(ShoppingCartContext);
 	const { order } = useContext(OrdersContext);
 	const { userId } = useContext(AuthContext);
 	const [orderInformation, setOrderInformation] = useState({});
@@ -244,9 +244,13 @@ export const OrdersForm = () => {
 						if (shoppingCart[key].userId == userId) {
 							Axios.delete(
 								`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${shoppingCart[key].id}.json`
-							).catch((err) => {
-								console.log(err.response.data);
-							});
+							)
+								.then(() => {
+									initialCounterValue(userId);
+								})
+								.catch((err) => {
+									console.log(err.response.data);
+								});
 						}
 					}
 					navigate("/orders");

@@ -12,7 +12,7 @@ import ShoppingCartContext from "../store/shopping-cart-context";
 export const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { counter } = useContext(ShoppingCartContext);
+	const { counter, shoppingCart } = useContext(ShoppingCartContext);
 	const { token, isLogin, logout } = useContext(AuthContext);
 	const [userName, setUserName] = useState("");
 	const [toggleLogOut, setToggleLogOut] = useState(false);

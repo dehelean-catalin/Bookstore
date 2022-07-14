@@ -3,7 +3,7 @@ import Axios from "axios";
 const ShoppingCartContext = React.createContext({
 	shoppingCart: [],
 	counter: 0,
-	shoppingCartHandler: () => {},
+	shoppingCartHandler: (data) => {},
 	addToCart: (book, userId) => {},
 	deleteItemFromShoppingCart: (id, userId) => {},
 	initialCounterValue: (userId) => {},
@@ -17,12 +17,6 @@ export const ShoppingCartContextProvider = (props) => {
 		setShoppingCart(items);
 	};
 
-	const incrementCounter = () => {
-		setCounter(counter + 1);
-	};
-	const decrementCounter = () => {
-		setCounter(counter - 1);
-	};
 	const initialCounterValue = (userId) => {
 		Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json").then(
 			(response) => {
@@ -44,7 +38,7 @@ export const ShoppingCartContextProvider = (props) => {
 			userId: userId,
 		})
 			.then(() => {
-				incrementCounter();
+				initialCounterValue(userId);
 			})
 			.catch((err) => {
 				console.log(err.response.data);
@@ -55,8 +49,6 @@ export const ShoppingCartContextProvider = (props) => {
 			.then(() => {
 				Axios.get("https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json")
 					.then((response) => {
-						console.log(userId);
-						console.log(response.data);
 						let loadedShoppingCart = [];
 						for (const key in response.data) {
 							loadedShoppingCart.push({
@@ -69,7 +61,7 @@ export const ShoppingCartContextProvider = (props) => {
 							});
 						}
 						setShoppingCart(loadedShoppingCart.filter((item) => item.userId == userId));
-						decrementCounter();
+						initialCounterValue(userId);
 					})
 					.catch((err) => {
 						console.log(err.response.data);

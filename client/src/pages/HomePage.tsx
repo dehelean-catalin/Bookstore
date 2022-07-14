@@ -5,21 +5,14 @@ import { BookList } from "../components/BookList";
 import "./HomePage.css";
 import { useHttp } from "../hooks/use-http";
 import Axios from "axios";
+import {IBook} from "../models/models"
 
-interface Book {
-	id:string;
-	title:string;
-	price:number;
-	icon:string;
-	author:string;
-	description:string;
-}
 
 export const HomePage:React.FC = () => {
-	const [books, setBooks] = useState<Book[]>([]);
+	const [books, setBooks] = useState<IBook[]>([]);
 
-	const transfromData = (books:Book[]) => {
-		let loadedData:Book[] = [];
+	const transfromData = (books:IBook[]) => {
+		let loadedData:IBook[] = [];
 		
 		for (const key in books) {
 			loadedData.push({
