@@ -1,61 +1,61 @@
 .shopping-cart {
-	display: flex;
-	justify-content: center;
 	width: 100%;
+	height: 84.65vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .shopping-cart-container {
+	width: 70%;
+	height: 700px;
 	display: flex;
 	flex-direction: column;
-	width: 70%;
 }
 .shopping-cart-empty {
-	color: rgb(156, 156, 156);
-	height: 195px;
+	height: 550px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	color: rgb(156, 156, 156);
 	font-size: 36px;
 }
 .empty-icon {
-	margin-right: 8px;
 	font-size: 54px;
+	margin-right: 8px;
 }
 
 .shopping-cart-title {
 	font: normal normal bold 38px/46px Lora;
-	letter-spacing: 0px;
 	color: #262626;
 	margin-bottom: 32px;
 	padding: 0px;
 }
 .shopping-cart-total {
-	font: normal normal bold 30px/38px Lora;
-	letter-spacing: 0px;
-	color: #262626;
 	display: flex;
 	justify-content: space-between;
-	margin: 32px 0px 47px 0px;
+	color: #262626;
+	font: normal normal bold 30px/38px Lora;
+	margin: 32px 0px 40px 0px;
 }
 .price {
-	font: normal normal bold 30px/38px Roboto;
-	letter-spacing: 0px;
 	color: #b69454;
+	font: normal normal bold 30px/38px Roboto;
 }
 .shopping-cart-buttons {
-	height: 40px;
 	display: flex;
 	justify-content: space-between;
 }
 .contiune-shopping-btn {
 	width: 232px;
+	height: 40px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border: 1px solid #000000;
-	border-radius: 4px;
+	color: black;
 	font: normal normal normal 14px/24px Lora;
 	text-decoration: none;
-	color: black;
+	border: 1px solid #000000;
+	border-radius: 4px;
 }
 .contiune-shopping-btn:hover {
 	cursor: pointer;
@@ -67,21 +67,21 @@
 	justify-content: center;
 	background: #000000;
 	color: #ffffff;
-	border-radius: 4px;
-	border: 0px;
 	font: normal normal normal 14px/24px Lora;
 	text-decoration: none;
+	border-radius: 4px;
+	border: 0px;
 }
 .place-order-btn:hover {
 	cursor: pointer;
 }
 .home-page-loading {
+	color: #4e4e4e;
 	font-size: 50px;
 	font-weight: 700;
-	color: #4e4e4e;
 }
 .home-page-error {
+	color: #ff3e3e;
 	font-size: 50px;
 	font-weight: 700;
-	color: #ff3e3e;
 }

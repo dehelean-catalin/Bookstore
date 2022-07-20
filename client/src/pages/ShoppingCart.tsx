@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { FC, useContext, useEffect } from "react";
 import { ShoppingCartList } from "../components/ShoppingCartList";
 import { Link } from "react-router-dom";
 import "./ShoppingCart.css";
@@ -11,43 +11,44 @@ import ShoppingCartContext from "../store/shopping-cart-context";
 import { IShoppingCartBook } from "../models/models";
 export const ShoppingCart = () => {
 	const { orderHandler } = useContext(OrdersContext);
-	const { shoppingCart, shoppingCartHandler } = useContext(ShoppingCartContext);
+	const { shoppingCart, getShoppingCart } = useContext(ShoppingCartContext);
 	const { userId } = useContext(AuthContext);
-	const shoppingCardData = (items:IShoppingCartBook[]) => {
-		let loadedData:IShoppingCartBook[] = [];
-		for (const key in items) {
-			loadedData.push({
-				id: key,
-				userId: items[key].userId,
-				title: items[key].title,
-				price: items[key].price,
-				icon: items[key].icon,
-				author: items[key].author,
-				description: items[key].description,
-			});
-		}
-		shoppingCartHandler(loadedData.filter((item) => item.userId === userId));
-	};
-	const { sendRequest, httpError, isLoading } = useHttp(
-		{
-			url: "https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json",
-			httpMethod: Axios.get,
-		},
-		shoppingCardData
-	);
+	// const shoppingCardData = (items:IShoppingCartBook[]) => {
+	// 	let loadedData:IShoppingCartBook[] = [];
+	// 	for (const key in items) {
+	// 		loadedData.push({
+	// 			id: key,
+	// 			userId: items[key].userId,
+	// 			title: items[key].title,
+	// 			price: items[key].price,
+	// 			icon: items[key].icon,
+	// 			author: items[key].author,
+	// 			description: items[key].description,
+	// 		});
+	// 	}
+	// 	shoppingCartHandler(loadedData.filter((item) => item.userId === userId));
+	// };
+	// const { sendRequest, httpError, isLoading } = useHttp(
+	// 	{
+	// 		url: "https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart.json",
+	// 		httpMethod: Axios.get,
+	// 	},
+	// 	shoppingCardData
+	// );
+	// useEffect(() => {
+	// 	sendRequest();
+	// }, []);
 	useEffect(() => {
-		sendRequest();
+		getShoppingCart(userId);
 	}, []);
+	const priceValues: number[] = shoppingCart.map((item: IShoppingCartBook) => item.price);
+	const totalPrice: number = +priceValues.reduce((a, b) => a + b, 0).toFixed(2);
+	const orderId: number = Math.floor(Math.random() * 90000) + 10000;
+	let shoppingCartIsEmpty: boolean = false;
 
-	const priceValues:number[] = shoppingCart.map((item:IShoppingCartBook) => item.price);
-	const totalPrice:number = +priceValues.reduce((a, b) => a + b, 0).toFixed(2);
-	const orderId:number = Math.floor(Math.random() * 90000) + 10000;
-	let shoppingCartIsEmpty:boolean =false;
-
-	if(shoppingCart.length=== 0){
-       shoppingCartIsEmpty = true   
+	if (shoppingCart.length === 0) {
+		shoppingCartIsEmpty = true;
 	}
-	
 
 	const handlePlaceOrder = () => {
 		orderHandler({
@@ -58,20 +59,20 @@ export const ShoppingCart = () => {
 			price: totalPrice,
 		});
 	};
-	if (httpError) {
-		return (
-			<div className="shopping-cart">
-				<div className="home-page-error">{httpError}</div>
-			</div>
-		);
-	}
-	if (isLoading) {
-		return (
-			<div className="shopping-cart">
-				<div className="home-page-loading">Loading ...</div>
-			</div>
-		);
-	}
+	// if (httpError) {
+	// 	return (
+	// 		<div className="shopping-cart">
+	// 			<div className="home-page-error">{httpError}</div>
+	// 		</div>
+	// 	);
+	// }
+	// if (isLoading) {
+	// 	return (
+	// 		<div className="shopping-cart">
+	// 			<div className="home-page-loading">Loading ...</div>
+	// 		</div>
+	// 	);
+	// }
 	return (
 		<div className="shopping-cart">
 			<div className="shopping-cart-container">

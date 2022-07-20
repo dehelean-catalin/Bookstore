@@ -1,6 +1,8 @@
 .login {
 	width: 85%;
+	height: 84.65vh;
 	display: flex;
+	align-items: center;
 	justify-content: center;
 }
 .login-image {
@@ -8,12 +10,14 @@
 	width: 512px;
 }
 .login-form {
+	height: 550px;
 	width: 488px;
 	display: flex;
 	flex-direction: column;
 	margin-left: 188px;
 }
 .login-title {
+	font-family: inherit;
 	font: normal normal bold 48px/61px Lora;
 }
 .login-subtitle {
@@ -26,8 +30,7 @@
 	color: #9f9f9f;
 	font: normal normal normal 16px/24px Roboto;
 	padding-left: 12px;
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin: 4px 0px;
 	border: 1px solid #e9e9e9;
 	border-radius: 4px;
 }
@@ -37,8 +40,7 @@
 	background-color: rgb(211, 100, 100);
 	font: normal normal normal 16px/24px Roboto;
 	padding-left: 12px;
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin: 4px 0px;
 	border: 1px solid #ff0000;
 	border-radius: 4px;
 }
@@ -49,7 +51,16 @@
 .error-message {
 	color: red;
 	height: 30px;
-	margin-bottom: 10px;
+}
+.request-error-message {
+	height: 30px;
+	display: flex;
+	align-items: center;
+	background-color: rgb(255, 193, 193);
+	color: red;
+	margin: 4px 0px;
+	padding: 4px 12px;
+	border-radius: 4px;
 }
 .input-checkbox-container {
 	display: flex;

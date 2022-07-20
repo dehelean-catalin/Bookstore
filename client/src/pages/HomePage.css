@@ -1,25 +1,28 @@
 .home-page {
 	display: flex;
-	width: 100%;
 	flex-direction: column;
 	align-items: center;
+	padding: 0px 40px;
+	transform: translateX(-10px);
 }
 .home-page-category {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin-bottom: 40px;
 	transform: translateY(-120px);
 }
 .category-title {
 	height: 132px;
-	width: 1728px;
+	width: 100%;
+	padding: 0px 50px;
 	display: flex;
 	align-items: center;
 	color: #262626;
 	background-color: white;
 	font-size: 28px;
 	font-weight: 400;
-	padding-left: 80px;
+	border-radius: 12px;
 }
 
 .home-page-loading {

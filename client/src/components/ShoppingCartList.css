@@ -1,5 +1,5 @@
 .shopping-cart-list {
-	max-height: 550px;
+	height: 550px;
 	overflow: auto;
 	padding-right: 30px;
 }

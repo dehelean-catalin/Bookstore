@@ -25,7 +25,7 @@ const DEFAULT_INITIAL_VALUES = {
 };
 export const OrdersForm = () => {
 	let navigate = useNavigate();
-	const { shoppingCart, counterHandler, initialCounterValue } = useContext(ShoppingCartContext);
+	const { shoppingCart, getShoppingCart } = useContext(ShoppingCartContext);
 	const { order } = useContext(OrdersContext);
 	const { userId } = useContext(AuthContext);
 	const [orderInformation, setOrderInformation] = useState({});
@@ -128,6 +128,7 @@ export const OrdersForm = () => {
 		valueChangeHandler: billingPhoneChangehandler,
 		inputBlurHandler: billingPhoneBlurHandler,
 	} = useInput((value) => value.trim() !== "" && value.length === 10, initialValues.billingPhone);
+
 	const {
 		value: deliveryCountryValue,
 		isValid: deliveryCountryValid,
@@ -142,13 +143,19 @@ export const OrdersForm = () => {
 		valueChangeHandler: deliveryAddressChangehandler,
 		inputBlurHandler: deliveryAddressBlurHandler,
 	} = useInput((value) => value.trim() !== "", initialValues.deliveryAddress);
+	let reggex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+
 	const {
 		value: deliveryPhoneValue,
 		isValid: deliveryPhoneValid,
 		hasError: deliveryPhoneError,
 		valueChangeHandler: deliveryPhoneChangehandler,
 		inputBlurHandler: deliveryPhoneBlurHandler,
-	} = useInput((value) => value.trim() !== "" && value.length === 10, initialValues.deliveryPhone);
+	} = useInput(
+		(value) => value.trim() !== "" && value.length === 10 && reggex.test(+value),
+		initialValues.deliveryPhone
+	);
+
 	const {
 		value: deliveryDateValue,
 		isValid: deliveryDateValid,
@@ -219,11 +226,11 @@ export const OrdersForm = () => {
 			Axios.put(
 				`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/orders/${orderInformation.key}.json`,
 				{
-					userId: userId,
-					id: id,
-					items: items,
-					price: price,
-					deliveryStatus: deliveryStatus,
+					userId,
+					id,
+					items,
+					price,
+					deliveryStatus,
 					costumerDetails,
 				}
 			)
@@ -246,7 +253,7 @@ export const OrdersForm = () => {
 								`https://itperspectives-dda22-default-rtdb.europe-west1.firebasedatabase.app/shopping-cart/${shoppingCart[key].id}.json`
 							)
 								.then(() => {
-									initialCounterValue(userId);
+									getShoppingCart(userId);
 								})
 								.catch((err) => {
 									console.log(err.response.data);

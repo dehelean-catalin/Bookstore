@@ -17,11 +17,12 @@ import { BookDetails } from "./pages/BookDetails";
 
 function App() {
 	const { isLogin, userId } = useContext(AuthContext);
-	const { initialCounterValue } = useContext(ShoppingCartContext);
+	const { getShoppingCart } = useContext(ShoppingCartContext);
 
 	useEffect(() => {
-		initialCounterValue(userId);
+		getShoppingCart(userId);
 	}, [isLogin]);
+
 	return (
 		<div className="App">
 			<Header />

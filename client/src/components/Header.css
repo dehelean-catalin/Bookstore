@@ -1,11 +1,12 @@
 header {
 	height: 72px;
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 nav {
-	width: 77%;
+	width: 85%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -24,14 +25,21 @@ li {
 	align-items: center;
 	text-decoration: none;
 	margin: 0px 6px;
-	height: 100%;
+	height: 60%;
 }
+
 .active-tab {
 	background-color: #b69454;
 	color: white;
+	border-radius: 4px;
 }
 .inactive-tab {
 	color: black;
+	transition: 0.3s all;
+	border-radius: 4px;
+}
+.inactive-tab:hover {
+	background-color: #f3f1ee;
 }
 .header-link {
 	color: inherit;
@@ -104,7 +112,7 @@ h2 {
 	padding: 4px 5px;
 	border-radius: 50%;
 	position: absolute;
-	top: 15px;
+	top: 5px;
 	left: 10px;
 }
 .backdrop {

@@ -12,7 +12,7 @@ import ShoppingCartContext from "../store/shopping-cart-context";
 export const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { counter, shoppingCart } = useContext(ShoppingCartContext);
+	const { shoppingCart } = useContext(ShoppingCartContext);
 	const { token, isLogin, logout } = useContext(AuthContext);
 	const [userName, setUserName] = useState("");
 	const [toggleLogOut, setToggleLogOut] = useState(false);
@@ -55,7 +55,7 @@ export const Header = () => {
 						<Link to={isLogin ? "/cart" : "/login"} className="header-link">
 							<IoCartOutline className="cart-icon" />
 							<h2> SHOPPING CART</h2>
-							{isLogin && counter ? <div className="counter">+{counter}</div> : ""}
+							{isLogin && !!shoppingCart.length ? <div className="counter">+{shoppingCart.length}</div> : ""}
 						</Link>
 					</li>
 					<li className={isOrdersActive}>
@@ -74,9 +74,7 @@ export const Header = () => {
 								className="backdrop"
 								style={toggleLogOut ? { display: "flex" } : { display: "none" }}
 								onClick={() => setToggleLogOut(false)}
-							>
-								lala
-							</div>
+							></div>
 							{toggleLogOut && (
 								<button className="sign-out-btn" onClick={logOutHandler}>
 									<RiLogoutBoxRLine className="sign-out-icon" /> Sign Out

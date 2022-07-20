@@ -1,7 +1,5 @@
 .details {
 	display: flex;
-	justify-content: center;
-	padding: 157px 284px 186px 0px;
 }
 
 .details-image {
@@ -9,7 +7,7 @@
 	height: 526px;
 	background-color: black;
 	padding: 0;
-	margin-right: 188px;
+	margin-right: 150px;
 }
 .details-container {
 	width: 652px;

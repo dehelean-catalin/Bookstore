@@ -1,6 +1,8 @@
 .register {
 	width: 85%;
+	height: 84.65vh;
 	display: flex;
+	align-items: center;
 	justify-content: center;
 }
 .register-image {
@@ -8,6 +10,7 @@
 	width: 512px;
 }
 .register-form {
+	height: 550px;
 	width: 488px;
 	display: flex;
 	flex-direction: column;
@@ -19,26 +22,24 @@
 .register-subtitle {
 	font: normal normal normal 20px/28px Roboto;
 	color: #262626;
-	margin-bottom: 64px;
+	margin-bottom: 54px;
 }
 .register-email-valid {
 	height: 40px;
 	color: #9f9f9f;
 	font: normal normal normal 16px/24px Roboto;
 	padding-left: 12px;
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin: 4px 0px;
 	border: 1px solid #e9e9e9;
 	border-radius: 4px;
 }
 .register-email-invalid {
 	height: 40px;
-	color: #9f9f9f;
-	background-color: rgb(211, 100, 100);
+	color: red;
+	background-color: rgb(255, 200, 200);
 	font: normal normal normal 16px/24px Roboto;
 	padding-left: 12px;
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin: 4px 0px;
 	border: 1px solid #ff0000;
 	border-radius: 4px;
 }
@@ -49,7 +50,7 @@
 .error-message {
 	color: red;
 	height: 30px;
-	margin-bottom: 10px;
+	font-size: 14px;
 }
 .register-btn {
 	width: 232px;
@@ -60,22 +61,13 @@
 	background: #000000;
 	color: #ffffff;
 	font: normal normal normal 14px/24px Lora;
+	margin-top: 25px;
 	border-radius: 4px;
 	border: 0px;
-	margin-top: 40px;
 	cursor: pointer;
 }
 .register-btn:disabled {
-	width: 232px;
-	height: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	background: #616161;
 	color: #a7a7a7;
-	font: normal normal normal 14px/24px Lora;
-	border-radius: 4px;
-	border: 0px;
-	margin-top: 40px;
 	cursor: auto;
 }

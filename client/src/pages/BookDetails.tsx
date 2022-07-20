@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { Details } from "../components/Details";
+import "./BookDetails.css";
 
 export const BookDetails = () => {
 	const params = useParams();
@@ -34,5 +35,5 @@ export const BookDetails = () => {
 			</div>
 		);
 	}
-	return <div className="bookDetails">{bookDetails && <Details book={bookDetails} />}</div>;
+	return <div className="book-details">{bookDetails && <Details book={bookDetails} />}</div>;
 };

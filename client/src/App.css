@@ -1,9 +1,8 @@
 .App {
-	width: 100vw;
-	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	overflow-x: hidden;
 }
 .page-not-found-error {
 	text-align: center;

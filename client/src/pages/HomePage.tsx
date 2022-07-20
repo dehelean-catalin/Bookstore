@@ -5,15 +5,14 @@ import { BookList } from "../components/BookList";
 import "./HomePage.css";
 import { useHttp } from "../hooks/use-http";
 import Axios from "axios";
-import {IBook} from "../models/models"
+import { IBook } from "../models/models";
 
-
-export const HomePage:React.FC = () => {
+export const HomePage: React.FC = () => {
 	const [books, setBooks] = useState<IBook[]>([]);
 
-	const transfromData = (books:IBook[]) => {
-		let loadedData:IBook[] = [];
-		
+	const transfromData = (books: IBook[]) => {
+		let loadedData: IBook[] = [];
+
 		for (const key in books) {
 			loadedData.push({
 				id: key,
@@ -54,10 +53,10 @@ export const HomePage:React.FC = () => {
 	return (
 		<div className="home-page">
 			<Carousel slides={SliderData} />
+
 			<div className="home-page-category">
 				<div className="category-title">Best books of the mouth</div>
 				{books && <BookList booksList={books} />}
-
 				<div className="category-title">Recently added</div>
 				{books && <BookList booksList={books} />}
 			</div>

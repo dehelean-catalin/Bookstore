@@ -7,7 +7,7 @@ export interface IBook {
 	description:string;
 }
 export interface IShoppingCartBook extends IBook {
-	userId: string
+	userId: string;
 }
 
 export interface IOrder {
